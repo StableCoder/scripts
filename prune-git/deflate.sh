@@ -22,7 +22,7 @@ objects=`git verify-pack -v .git/objects/pack/pack-*.idx | grep -v chain | sort 
 printf "All sizes are in kB. The pack column is the size of the object, compressed, inside the pack file.\n"
 originalSize=$(du -sb . | cut -f1)
 originalSize=$(($originalSize / 1024 / 1024))
-printf "Total repositoy size is %iMB\n\n" $originalSize
+printf "Total repository size is %iMB\n\n" $originalSize
 
 output="size,pack,SHA,location"
 for y in $objects
@@ -42,7 +42,7 @@ done
 echo -e $output | column -t -s ', '
 
 printf "\nEnter the file to remove the history, or leave blank to exit:\n"
-read removal
+read -e removal
 
 if [ "$removal" != "" ]; then
 	printf "\nRemoving '$removal' from the repository.\n"
