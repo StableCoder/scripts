@@ -55,3 +55,15 @@ After an initial installation of Visual Studio, localed on the local drive, typi
 ```ps
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 ```
+
+#### Turning Hyper-V On/Off
+
+After the initial installation of Hyper-V, using these can allow turning it off and on with a restart of the computer, without (un)installing it from the features menu.
+
+```ps
+# Enable
+bcdedit /set hypervisorlaunchtype auto
+
+# Disable
+bcdedit /set hypervisorlaunchtype off
+```
