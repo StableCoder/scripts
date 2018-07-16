@@ -33,6 +33,18 @@ After an initial installation of Visual Studio, localed on the local drive, typi
 
 ## Useful Standalones
 
+#### dos2unix/unix2dos
+
+Every programmer's nightmare, line ending differences. These quick one-liners can solve that issue!
+
+```ps
+# dos2unix
+$x = get-content -raw -path <FILE_NAME>; $x -replace "`r`n","`n" | set-content -path <FILE_NAME>
+
+# unix2dos
+$x = get-content -raw -path <FILE_NAME>; $x -replace "[^`r]`n","`r`n" | set-content -path <FILE_NAME>
+```
+
 #### Getting the windows release eg. 1709, 1803
 
 ```ps
