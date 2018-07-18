@@ -4,3 +4,4 @@ rm .\vs_community.exe
 
 Copy-Item -Path entrypoint.ps1 -Destination C:\entrypoint.ps1
 Copy-Item -Path entrypoint.bat -Destination C:\entrypoint.bat
+Write-Host "MSVC setup complete."
