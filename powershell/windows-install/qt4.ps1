@@ -1,3 +1,4 @@
+try {
 choco install -y activeperl
 
 C:\entrypoint.ps1
@@ -16,3 +17,8 @@ cd ..
 Remove-Item -path qt-everywhere-opensource-src-4.8.7 -Recurse -ErrorAction SilentlyContinue
 
 [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\Qt-4.8.7\bin", [System.EnvironmentVariableTarget]::Machine )
+}
+catch
+{
+    exit 1
+}

@@ -1,4 +1,4 @@
-C:\entrypoint.ps1
+try {
 [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
 wget http://www.portaudio.com/archives/pa_stable_v$env:PORTAUDIO_VER.tgz -OutFile pa_stable_v$env:PORTAUDIO_VER.tgz -UseBasicParsing
 7z x pa_stable_v$env:PORTAUDIO_VER.tgz
@@ -25,3 +25,8 @@ Remove-Item -Path portaudio-src -Recurse -ErrorAction SilentlyContinue
 [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\portaudio\bin", [System.EnvironmentVariableTarget]::Machine )
 [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:\portaudio\include", [System.EnvironmentVariableTarget]::Machine )
 [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";C:\portaudio\lib", [System.EnvironmentVariableTarget]::Machine )
+}
+catch
+{
+    exit 1
+}

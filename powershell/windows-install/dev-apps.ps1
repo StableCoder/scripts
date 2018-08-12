@@ -1,3 +1,4 @@
+try {
 # Chocolatey
 Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
@@ -11,3 +12,8 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 
 # Conan
 pip install conan
+}
+catch
+{
+    exit 1
+}
