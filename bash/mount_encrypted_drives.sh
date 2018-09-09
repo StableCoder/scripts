@@ -5,11 +5,6 @@ do
 key="$1"
 
 case $key in
-    -f)
-    INPUT_FILE="$2"
-    shift
-    shift
-    ;;
     --help)
     echo "This script allows for easier use of mass encrypted drives. It reads"
     echo "from a file given by -f <name> and has items within paired per-line as"
@@ -20,16 +15,21 @@ case $key in
 esac
 done
 
+# Read the input file for block IDs and mapping locations.
+read -ep "Enter the file to read block/mount information from: " INPUT_FILE
 if [ "$INPUT_FILE" != "" ]; then
-    # Read the input file for block IDs and mapping locations.
     i=0
     while read line
     do
         IN_FILEARR[$i]="$line"
         i=$((i+1))
     done < $INPUT_FILE
+else
+    echo "No file specified."
+    exit 0
 fi
 
+# Read in `blkid` info
 i=0
 while read line
 do
@@ -37,6 +37,7 @@ do
     i=$((i+1))
 done< <(blkid)
 
+# Process/compare and mount.
 for blkid_line in "${IN_BLKARR[@]}"
 do
     for file_line in "${IN_FILEARR[@]}"
@@ -45,19 +46,12 @@ do
         file_mnt=$( echo $file_line | cut -d " " -f 2)
         blkid_dev=$( echo $blkid_line | cut -d ":" -f 1)
         # Search for the file line that has a matching block ID
-        if [[ $blkid_line == *$file_blkid* ]]
+        if [[ $blkid_line == *$file_blkid* && ! $(ls /dev/mapper/$file_blkid) ]]
         then
             echo "Found matching blkid for $file_blkid, with target of $file_mnt"
-            i=0
-            map_name="encrypted$i"
-            while [ $(ls /dev/mapper/$map_name) ]
-            do
-                i=$((i+1))
-                map_name="encrypted$i"
-            done
-            cryptsetup open $blkid_dev $map_name
+            cryptsetup open $blkid_dev $file_blkid
             mkdir -p $file_mnt
-            mount /dev/mapper/$map_name $file_mnt
+            mount /dev/mapper/$file_blkid $file_mnt
         fi
     done
 done
