@@ -3,7 +3,7 @@ Param(
 )
 
 try {
-wget https://cfhcable.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20180531.tar.xz -OutFile $InstallDir\msys2.tar.gz -UseBasicParsing
+wget https://cfhcable.dl.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-$env:MSYS_VER.tar.xz -OutFile $InstallDir\msys2.tar.gz -UseBasicParsing
 
 7z x $InstallDir\msys2.tar.gz
 7z x $InstallDir\msys2.tar
@@ -32,7 +32,7 @@ bash -lc 'pacman --noconfirm -S mingw64/mingw-w64-x86_64-clang mingw64/mingw-w64
 # Clean the cache, saving a bit of space
 bash -lc 'pacman --noconfirm -Scc'
 
-[Environment]::SetEnvironmentVariable( "Path", [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";$InstallDir\msys64\usr\bin;$InstallDir", [System.EnvironmentVariableTarget]::Machine )
+[Environment]::SetEnvironmentVariable( "Path", [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";$InstallDir\msys64\usr\bin;$InstallDir\mingw64\bin;", [System.EnvironmentVariableTarget]::Machine )
 }
 catch
 {
