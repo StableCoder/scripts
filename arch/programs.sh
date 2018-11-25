@@ -23,7 +23,7 @@ confirm() {
 # Development
 pacman -S --noconfirm base-devel gcc clang llvm gdb lldb lld python go rust 
 pacman -S --noconfirm doxygen cppcheck valgrind massif-visualizer gnome-terminal git subversion cmake make ninja
-pacman -S --noconfirm code vim
+pacman -S --noconfirm code vim kate
 
 # Virtualization
 pacman -S --noconfirm qemu docker docker-compose libvirt virt-manager qemu-block-gluster glusterfs ebtables dnsmasq
@@ -40,10 +40,20 @@ usermod -aG docker $(whoami)
 usermod -aG libvirt $(whoami)
 
 # Other Applications
-pacman -S --noconfirm openssh clementine vim firefox keepassxc libreoffice-fresh rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip
+pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine vim firefox thunderbird mutt keepassxc libreoffice-fresh rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip
 
 # Development Libaries
-pacman -S --noconfirm portaudio bullet vulkan-devel glm catch2
+pacman -S --noconfirm portaudio bullet vulkan-devel glm catch2 
+
+# AUR
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si --noconfirm
+cd ..
+rm -rf yay
+
+# AUR Packages
+yay -S --noconfirm --nodiffmenu --noeditmenu --noupgrademenu --afterclean monofonto remmina-plugin-rdesktop conan protonmail-bridge
 
 # Personalization
 confirm "Install KDE Plasma DE? [y/N]" && export INSTALLKDE=1
@@ -58,5 +68,5 @@ fi
 
 confirm "Install i3 DE? [y/N]" && export INSTALLI3=1
 if [ "$INSTALLI3" == 1 ]; then
-    pacman -S --noconfirm i3-wm
+    pacman -S --noconfirm i3-gaps i3status i3lock feh dmenu xbacklight
 fi

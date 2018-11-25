@@ -1,0 +1,30 @@
+# This file should be located in the home directory, as ~/.muttrc
+set from="user@protonmail.com"
+set my_user="user@protonmail.com"
+set my_pass="pass"
+
+set ssl_starttls=yes
+
+set smtp_url="smtp://$my_user:$my_pass@127.0.0.1:port"
+
+# workaround for https://github.com/neomutt/neomutt/issues/1211
+set imap_authenticators=login
+
+set folder="imap://$my_user:$my_pass@127.0.0.1:port/"
+set spoolfile="+INBOX"
+set trash="+Trash"
+set mbox="+Received"
+set move=no
+set record="+Sent"
+set copy=no
+set postponed="+Drafts"
+set postpone=yes
+
+unset imap_passive
+set mail_check=20 # seconds
+set timeout=10 # seconds
+set imap_check_subscribed=yes
+
+# Sidebar
+set sidebar_visible=yes
+set sidebar_short_path=yes
