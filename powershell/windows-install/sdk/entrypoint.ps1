@@ -26,14 +26,10 @@ $env:INCLUDE = $env:INCLUDE + ";" + [System.Environment]::GetEnvironmentVariable
 $env:LIB = $env:LIB + ";" + [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","User")
 
 if($Target.equals("clang-cl")) {
-    $env:PATH = $env:PATH + ";" + [System.Environment]::GetEnvironmentVariable("LLVM_DIR","Machine") + "\bin"
-
     $env:CC="clang-cl"
     $env:CXX="clang-cl"
 }
 if($Target.equals("clang")) {
-    $env:PATH = $env:PATH + ";" + [System.Environment]::GetEnvironmentVariable("LLVM_DIR","Machine") + "\bin"
-    
     $env:CC="clang"
     $env:CXX="clang"
     $env:LDFLAGS="-fuse-ld=lld"
