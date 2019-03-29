@@ -1,6 +1,6 @@
 try {
-    mkdir libyaml
-    cd libyaml
+    mkdir libyaml-build
+    cd libyaml-build
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/yaml/libyaml/archive/${env:LIBYAML_VER}.tar.gz -OutFile libyaml.tar.gz -UseBasicParsing
     7z x -aoa libyaml.tar.gz
@@ -13,7 +13,7 @@ try {
     ninja
     ninja install
     cd ../../..
-    Remove-Item -path .\libyaml\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -path .\libyaml-build\ -Recurse -ErrorAction SilentlyContinue
 
     [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\libyaml\bin", [System.EnvironmentVariableTarget]::Machine )
     [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:\libyaml\include", [System.EnvironmentVariableTarget]::Machine )

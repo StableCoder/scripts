@@ -1,5 +1,5 @@
 try {
-    mkdir bullet; cd bullet
+    mkdir bullet-build; cd bullet-build
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/bulletphysics/bullet3/archive/${env:BULLET_VER}.tar.gz -OutFile bullet.tar.gz -UseBasicParsing
     7z x bullet.tar.gz
@@ -12,7 +12,7 @@ try {
     ninja
     ninja install
     cd ../../..
-    Remove-Item -path bullet -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -path bullet-build -Recurse -ErrorAction SilentlyContinue
 
     [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\bullet\bin", [System.EnvironmentVariableTarget]::Machine )
     [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:\bullet\include", [System.EnvironmentVariableTarget]::Machine )
