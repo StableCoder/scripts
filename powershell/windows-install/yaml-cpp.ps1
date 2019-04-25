@@ -2,11 +2,9 @@ try {
     mkdir yaml-cpp-build
     cd yaml-cpp-build
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/jbeder/yaml-cpp/archive/master.zip -OutFile yaml-cpp.tar.gz -UseBasicParsing
-    7z x -aoa yaml-cpp.tar.gz
-    Remove-Item -path yaml-cpp.tar.gz
-    7z x -aoa yaml-cpp.tar
-    Remove-Item -path yaml-cpp.tar
+    wget https://github.com/jbeder/yaml-cpp/archive/master.zip -OutFile yaml-cpp.zip -UseBasicParsing
+    7z x -aoa yaml-cpp.zip
+    Remove-Item -path yaml-cpp.zip
     cd yaml-cpp-master
     mkdir build
     cd build
