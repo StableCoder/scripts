@@ -45,16 +45,6 @@ pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine vim fir
 # Development Libaries
 pacman -S --noconfirm portaudio bullet vulkan-devel glm catch2 
 
-# AUR
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si --noconfirm
-cd ..
-rm -rf yay
-
-# AUR Packages
-yay -S --noconfirm --nodiffmenu --noeditmenu --noupgrademenu --afterclean monofonto remmina-plugin-rdesktop conan protonmail-bridge
-
 # Personalization
 confirm "Install KDE Plasma DE? [y/N]" && export INSTALLKDE=1
 if [ "$INSTALLKDE" == 1 ]; then
