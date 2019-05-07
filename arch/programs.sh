@@ -22,7 +22,7 @@ confirm() {
 
 # Development
 pacman -S --noconfirm base-devel gcc clang llvm gdb lldb lld python go rust 
-pacman -S --noconfirm doxygen cppcheck valgrind massif-visualizer gnome-terminal git subversion cmake make ninja
+pacman -S --noconfirm doxygen cppcheck valgrind massif-visualizer gnome-terminal git git-lfs subversion cmake make ninja
 pacman -S --noconfirm code vim kate
 
 # Virtualization
