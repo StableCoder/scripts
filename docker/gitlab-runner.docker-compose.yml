@@ -1,0 +1,12 @@
+version: '3'
+services:
+  gitlab-runner:
+    image: gitlab/gitlab-runner:alpine
+    restart: always
+    privileged: true
+    volumes:
+      - GitlabRunnerConfig:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  GitlabRunnerConfig:
