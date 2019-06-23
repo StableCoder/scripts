@@ -42,5 +42,5 @@ then
     OUTPUT=$VOLUME-$(date +%Y-%m-%d-%H-%M-%S)
 fi
 
-docker run --rm -it -v $VOLUME:/volume -v /$(pwd):/backup alpine \
+docker run --rm -it -v $VOLUME:/volume -v /$(pwd):/backup ubuntu:latest \
     tar -cjpf /backup/$OUTPUT.tar.bz2 -C /volume ./

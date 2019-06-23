@@ -43,5 +43,5 @@ then
     read -p "Please enter the name of the volume to restore to: " VOLUME
 fi
 
-docker run --rm -it -v $VOLUME:/volume -v /$(pwd):/backup alpine \
+docker run --rm -it -v $VOLUME:/volume -v /$(pwd):/backup ubuntu:latest \
     sh -c "rm -rf /volume/* /volume/..?* /volume/.[!.]* ; tar --same-owner -C /volume/ -xjpf /backup/$FILE"
