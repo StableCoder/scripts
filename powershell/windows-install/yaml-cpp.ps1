@@ -1,7 +1,9 @@
+$invocationDir = (Get-Item -Path ".\").FullName
+
 try {
     # Use a working directory, to keep our work self-contained
-    mkdir yaml-cpp-build
-    cd yaml-cpp-build
+    mkdir build-workdir
+    cd build-workdir
 
     # Download/Extract the source code
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
@@ -24,8 +26,8 @@ try {
     ninja install
 
     # Delete our working directory
-    cd ../../..
-    Remove-Item -path .\yaml-cpp-build\ -Recurse -ErrorAction SilentlyContinue
+    cd $invocationDir
+    Remove-Item -path .\build-workdir\ -Recurse -ErrorAction SilentlyContinue
 
     # Setup the environment variables (Only if not found in the var already)
     if($null -eq ( ";C:\\yaml-cpp\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
@@ -45,6 +47,7 @@ try {
     }
 } catch {
     # Cleanup the failed build folder
-    Remove-Item -path .\yaml-cpp-build\ -Recurse -ErrorAction SilentlyContinue
+    cd $invocationDir
+    Remove-Item -path .\build-workdir\ -Recurse -ErrorAction SilentlyContinue
     exit 1
 }
