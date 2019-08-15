@@ -1,3 +1,8 @@
+Param(
+    # By default, build release variants of libraries
+    [string]$BuildType = "Release"
+)
+
 $invocationDir = (Get-Item -Path ".\").FullName
 
 try {

@@ -1,3 +1,8 @@
+Param(
+    # By default, build release variants of libraries
+    [string]$BuildType = "Release"
+)
+
 $invocationDir = (Get-Item -Path ".\").FullName
 
 try{
@@ -17,7 +22,7 @@ try{
     cd cmake-build
 
     # Configure/compile
-    cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release -DASSIMP_BUILD_ASSIMP_TOOLS=OFF -DASSIMP_BUILD_TESTS=OFF
+    cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DASSIMP_BUILD_ASSIMP_TOOLS=OFF -DASSIMP_BUILD_TESTS=OFF
     ninja
 
     # Remove the older install (if it exists)

@@ -1,3 +1,8 @@
+Param(
+    # By default, build release variants of libraries
+    [string]$BuildType = "Release"
+)
+
 $invocationDir = (Get-Item -Path ".\").FullName
 
 try {   
@@ -17,7 +22,7 @@ try {
     cd cmake-build
 
     # Configure Compile
-    cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="C:\glfw"
+    cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\glfw"
     ninja
 
     # Remove the older install (if it exists)

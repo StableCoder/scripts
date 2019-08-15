@@ -1,3 +1,8 @@
+Param(
+    # By default, build release variants of libraries
+    [string]$BuildType = "Release"
+)
+
 $invocationDir = (Get-Item -Path ".\").FullName
 
 try {
@@ -17,7 +22,7 @@ try {
     cd cmake-build
 
     # Configure/compile
-    cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON -DBUILD_BULLET3=OFF -DBUILD_BULLET2_DEMOS=OFF -DBUILD_EXTRAS=OFF -DBUILD_UNIT_TESTS=OFF -DBUILD_PYBULLET=OFF -DINSTALL_LIBS=ON -DCMAKE_INSTALL_PREFIX="C:\bullet"
+    cmake .. -G Ninja -DCMAKE_BUILD_TYPE="$BuildType" -DBUILD_SHARED_LIBS=OFF -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON -DBUILD_BULLET3=OFF -DBUILD_BULLET2_DEMOS=OFF -DBUILD_EXTRAS=OFF -DBUILD_UNIT_TESTS=OFF -DBUILD_PYBULLET=OFF -DINSTALL_LIBS=ON -DCMAKE_INSTALL_PREFIX="C:\bullet"
     ninja
 
     # Remove the older install (if it exists)
