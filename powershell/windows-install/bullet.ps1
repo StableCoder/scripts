@@ -1,24 +1,51 @@
+$invocationDir = (Get-Item -Path ".\").FullName
+
 try {
-    mkdir bullet-build; cd bullet-build
+    # Use a working directory, to keep our work self-contained
+    mkdir bullet-workdir
+    cd bullet-workdir
+    
+    # Download/Extract the source code
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/bulletphysics/bullet3/archive/${env:BULLET_VER}.tar.gz -OutFile bullet.tar.gz -UseBasicParsing
     7z x bullet.tar.gz
-    Remove-Item -path bullet.tar.gz
     7z x bullet.tar
-    Remove-Item -path bullet.tar
     cd bullet3-${env:BULLET_VER}
-    mkdir build; cd build
-    cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON -DBUILD_BULLET3=OFF -DBUILD_BULLET2_DEMOS=OFF -DBUILD_EXTRAS=OFF -DBUILD_UNIT_TESTS=OFF -DBUILD_PYBULLET=OFF -DINSTALL_LIBS=ON -DCMAKE_INSTALL_PREFIX=C:\bullet
-    ninja
-    ninja install
-    cd ../../..
-    Remove-Item -path bullet-build -Recurse -ErrorAction SilentlyContinue
 
-    [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\bullet\bin", [System.EnvironmentVariableTarget]::Machine )
-    [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:\bullet\include", [System.EnvironmentVariableTarget]::Machine )
-    [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";C:\bullet\lib", [System.EnvironmentVariableTarget]::Machine )
-}
-catch
-{
+    # Create/enter a separate build directory
+    mkdir cmake-build
+    cd cmake-build
+
+    # Configure/compile
+    cmake .. -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON -DBUILD_BULLET3=OFF -DBUILD_BULLET2_DEMOS=OFF -DBUILD_EXTRAS=OFF -DBUILD_UNIT_TESTS=OFF -DBUILD_PYBULLET=OFF -DINSTALL_LIBS=ON -DCMAKE_INSTALL_PREFIX="C:\bullet"
+    ninja
+
+    # Remove the older install (if it exists)
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\bullet
+
+    ## Install
+    ninja install
+    
+    # Delete our working directory
+    cd $invocationDir
+    Remove-Item -Path .\bullet-workdir\ -Recurse -ErrorAction SilentlyContinue
+
+    # Setup the environment variables (Only if not found in the var already)
+    if($null -eq ( ";C:\\bullet\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
+        # PATH
+        [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\bullet\bin", [System.EnvironmentVariableTarget]::Machine )
+    }
+    if($null -eq ( ";C:\\bullet\\include" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") -match $_ })) {
+        # CUSTOM_INCLUDE
+        [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:\bullet\include", [System.EnvironmentVariableTarget]::Machine )
+    }
+    if($null -eq ( ";C:\\bullet\\lib" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") -match $_ })) {
+        # CUSTOM_LIB
+        [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";C:\bullet\lib", [System.EnvironmentVariableTarget]::Machine )
+    }
+} catch {
+    # Cleanup the failed build folder
+    cd $invocationDir
+    Remove-Item -Path .\bullet-workdir\ -Recurse -ErrorAction SilentlyContinue
     exit 1
 }
