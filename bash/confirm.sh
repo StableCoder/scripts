@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 printf "Example bash script of using a confirmation dialog\n"
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # AUR
 git clone https://aur.archlinux.org/yay.git

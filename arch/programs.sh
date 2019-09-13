@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 if [ $SUDO_USER ]; then user=$SUDO_USER; else user=`whoami`; fi

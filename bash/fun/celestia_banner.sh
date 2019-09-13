@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # This file should be stored at /usr/local/bin/dynmotd
 ip="10.120.9.145"
 ip6="F1D8:ABCD:21:9::ABCD"
