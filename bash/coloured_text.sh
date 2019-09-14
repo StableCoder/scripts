@@ -12,10 +12,11 @@
 # For the full set, go here https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
 
 RED='\033[0;31m'
+GREEN='\033[0;32m'
 NO_COLOUR='\033[0m'
 
-printf "${RED}printf RED\n"
+printf "printf ${RED}RED\n"
 printf "printf ${NO_COLOUR} reset\n\n"
 
-echo -e "${RED}echo RED"
+echo -e "echo ${GREEN}GREEN"
 echo -e "echo ${NO_COLOUR} reset"
