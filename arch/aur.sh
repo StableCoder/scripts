@@ -8,4 +8,4 @@ cd ..
 rm -rf yay
 
 # AUR Packages
-yay -S --noconfirm --nodiffmenu --noeditmenu --noupgrademenu --afterclean monofonto remmina-plugin-rdesktop conan protonmail-bridge renderdoc
+yay -S --noconfirm --nodiffmenu --noeditmenu --noupgrademenu --afterclean monofonto conan protonmail-bridge renderdoc nordvpn yay

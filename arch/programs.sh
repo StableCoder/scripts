@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
+RED='\033[0;31m'
+DEFAULT='\033[0m'
+
 if [ $SUDO_USER ]; then user=$SUDO_USER; else user=`whoami`; fi
 if [ "$user" == "root" ] || [ "$user" == "" ]; then
-    echo "Don't run this as root! Create a user and use as them to setup docker/libvirt bindings."
-    exit
+    echo -e "${RED}Don't run this as root! Create a user and use as them to setup docker/libvirt bindings.${DEFAULT}"
+    exit 1
 fi
 
 confirm() {
@@ -21,8 +24,12 @@ confirm() {
 }
 
 # Development
+
+## Base Compilers
 pacman -S --noconfirm base-devel gcc clang llvm gdb lldb lld python go rust 
+## Dev Support Tools
 pacman -S --noconfirm doxygen cppcheck valgrind massif-visualizer gnome-terminal git git-lfs subversion cmake make ninja
+## Editors
 pacman -S --noconfirm code vim kate
 
 # Virtualization
@@ -40,10 +47,12 @@ usermod -aG docker $(whoami)
 usermod -aG libvirt $(whoami)
 
 # Other Applications
-pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine vim firefox thunderbird mutt keepassxc libreoffice-fresh rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip
+pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine keepassxc rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip aws-cli
+## Productivity
+pacman -S --noconfirm thunderbird firefox libreoffice-fresh
 
 # Development Libaries
-pacman -S --noconfirm portaudio bullet vulkan-devel glm catch2 
+pacman -S --noconfirm portaudio bullet vulkan-devel glm catch2 libyaml yaml-cpp
 
 # Personalization
 confirm "Install KDE Plasma DE? [y/N]" && export INSTALLKDE=1
