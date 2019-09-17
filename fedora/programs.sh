@@ -21,7 +21,7 @@ sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.micros
 dnf install -y code
 
 # Virtualization
-dnf install -y docker libvirt virt-manager qemu qemu-kvm docker-compose qemu-block-gluster gluster-fs
+dnf install -y docker libvirt virt-manager qemu qemu-kvm docker-compose qemu-block-gluster
 
 virsh net-autostart default
 
