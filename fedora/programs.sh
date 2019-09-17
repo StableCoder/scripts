@@ -24,19 +24,18 @@ dnf install -y code
 dnf install -y docker libvirt virt-manager qemu qemu-kvm docker-compose qemu-block-gluster
 
 systemctl start libvirtd
-systemctl start docker
-
 virsh net-autostart default
-
-usermod -aG docker $(whoami)
 usermod -aG libvirt $(whoami)
-
-systemctl stop docker
 systemctl stop libvirtd
 
 # Other Applications
-dnf install -y clementine awscli youtube-dl keepassxc openssh rsync remmina freerdp rdesktop remmina-plugins-rdp cool-retro-term ufw
+dnf install -y clementine awscli youtube-dl keepassxc openssh rsync remmina freerdp rdesktop remmina-plugins-rdp cool-retro-term ufw htop
 dnf install -y libreoffice firefox thunderbird
+
+# VLC
+dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+dnf install vlc
 
 # Development Libraries
 dnf install -y assimp-devel bullet-devel vulkan-devel portaudio-devel glfw-devel glm-devel catch-devel freeimage-devel yaml-cpp-devel 
