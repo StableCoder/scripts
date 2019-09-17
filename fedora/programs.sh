@@ -23,10 +23,16 @@ dnf install -y code
 # Virtualization
 dnf install -y docker libvirt virt-manager qemu qemu-kvm docker-compose qemu-block-gluster
 
+systemctl start libvirtd
+systemctl start docker
+
 virsh net-autostart default
 
 usermod -aG docker $(whoami)
 usermod -aG libvirt $(whoami)
+
+systemctl stop docker
+systemctl stop libvirtd
 
 # Other Applications
 dnf install -y clementine awscli youtube-dl keepassxc openssh rsync remmina freerdp rdesktop remmina-plugins-rdp cool-retro-term ufw
