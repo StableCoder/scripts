@@ -38,4 +38,7 @@ dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-rel
 dnf install vlc
 
 # Development Libraries
-dnf install -y assimp-devel bullet-devel vulkan-devel portaudio-devel glfw-devel glm-devel catch-devel freeimage-devel yaml-cpp-devel 
+dnf install -y assimp-devel bullet-devel vulkan-devel portaudio-devel glfw-devel glm-devel catch-devel freeimage-devel yaml-cpp-devel
+
+# Clean up the unwanted KDE programs
+dnf erase -y kontact korganizer konversation kolourpaint konqueror kmail falkon
