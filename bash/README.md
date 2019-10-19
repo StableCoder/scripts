@@ -14,6 +14,10 @@ An example of a bash script that takes in multi-part command line arguments that
 
 This script allows for easier use of mass encrypted drives. It reads from a file given by -f <FILENAME> and has items within paired per-line as `<blkid> <fs mount point>`, but still asks for the passphrase instead of looking for a file.
 
+# `variable_functions.sh`
+
+This is an example of functions that can be used to fill an environment variable for the script, which if the variable is required, retries infinitely until it's filled.
+
 # Useful script pieces
 
 This succeeds if something is at the mount location:
