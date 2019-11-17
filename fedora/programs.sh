@@ -6,14 +6,14 @@ dnf update -y
 
 # Development
 
+## Editors
+dnf install -y vim kate
 ## Base Compilers
 dnf install -y gcc gcc-c++ gdb clang lld lldb rust go llvm llvm-libs
 ## Dev Support Tools
 dnf install -y git git-lfs subversion make ninja-build cmake doxygen graphviz
 ## Analysis
 dnf install -y libasan liblsan libtsan libubsan clang-tools-extra iwyu cppcheck
-## Editors
-dnf install -y vim kate
 
 ## VS Code
 rpm --import https://packages.microsoft.com/keys/microsoft.asc
