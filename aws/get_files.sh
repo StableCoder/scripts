@@ -11,5 +11,7 @@ while read FILE; do
         mkdir -p -- "$DIR"
     fi
 
-    aws s3 cp "s3://$S3_BUCKET/$FILE" "$FILE"
+    if ! [ -s "$FILE" ]; then
+        aws s3 cp "s3://$S3_BUCKET/$FILE" "$FILE"
+    fi
 done < $1
