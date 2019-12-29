@@ -3,7 +3,7 @@ Param(
 )
 
 # Setup for MSVC
-pushd "C:\Program Files (x86)\Microsoft Visual Studio\2017\$env:VS_PACKAGE\VC\Auxiliary\Build\"
+pushd "C:\Program Files (x86)\Microsoft Visual Studio\2019\$env:VS_PACKAGE\VC\Auxiliary\Build\"
 if($Target.equals("x86")) {
     cmd /c "vcvars32.bat&set" |
     foreach {
@@ -20,7 +20,7 @@ if($Target.equals("x86")) {
     }
 }
 popd
-Write-Host "`nVisual Studio 2017 Command Prompt variables set." -ForegroundColor Yellow
+Write-Host "`nVisual Studio 2019 Command Prompt variables set." -ForegroundColor Yellow
 
 $env:INCLUDE = $env:INCLUDE + ";" + [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","User")
 $env:LIB = $env:LIB + ";" + [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","User")
