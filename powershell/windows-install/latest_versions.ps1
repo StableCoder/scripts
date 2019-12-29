@@ -1,6 +1,6 @@
 $env:ASSIMP_VER = "5.0.0"
 $env:MSYS_VER = "20180531"
-$env:WIN10_SDK_VER = "17763"
+$env:WIN10_SDK_VER = "18362"
 $env:GLFW_VER = "3.3"
 $env:GLM_VER = "0.9.9.6"
 $env:PORTAUDIO_VER = "190600_20161030"
