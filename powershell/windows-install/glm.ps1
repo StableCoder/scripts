@@ -16,19 +16,13 @@ try {
     7z x glm.zip
     cd glm
 
-    # Create/enter a separate build directory
-    mkdir cmake-build
-    cd cmake-build
-
-    # Configure/compile
-    cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\glm"
-    ninja
-
     # Remove the older install (if it exists)
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\newton
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\glm
+    mkdir C:\glm
+    mkdir C:\glm\include
 
     # Install
-    ninja install
+    Copy-Item -Recurse .\glm\ C:\glm\include\
 
     # Delete our working directory
     cd $invocationDir
