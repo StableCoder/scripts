@@ -24,13 +24,15 @@ try {
     # Configure Compile
     cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\glfw"
     ninja
+    if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\glfw
 
     # Install the compiled lib
     ninja install
-
+    if($LastExitCode -ne 0) { throw }
+    
     # Delete our working directory
     cd $invocationDir
     Remove-Item -Path .\glfw-workdir\ -Recurse -ErrorAction SilentlyContinue

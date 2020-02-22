@@ -23,12 +23,14 @@ try {
     # Configure/compile
     cmake .. -G Ninja -DNEWTON_BUILD_SANDBOX_DEMOS=OFF -DCMAKE_BUILD_TYPE=Release
     ninja
+    if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\newton
 
     # Install bin/lib
     ninja install
+    if($LastExitCode -ne 0) { throw }
     mkdir C:\newton
     Copy-Item build\* -Destination C:\newton\ -Recurse
 

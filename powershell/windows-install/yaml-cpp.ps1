@@ -23,12 +23,14 @@ try {
     # Configure/compile
     cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\yaml-cpp" -DBUILD_SHARED_LIBS=ON -DYAML_CPP_BUILD_CONTRIB=OFF -DYAML_CPP_BUILD_TESTS=OFF -DYAML_CPP_BUILD_TOOLS=OFF
     ninja
+    if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\yaml-cpp
     
     ## Install the newly compiled library
     ninja install
+    if($LastExitCode -ne 0) { throw }
 
     # Delete our working directory
     cd $invocationDir
@@ -51,6 +53,6 @@ try {
 } catch {
     # Cleanup the failed build folder
     cd $invocationDir
-    Remove-Item -Path .\build-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path .\yaml-cpp-workdir\ -Recurse -ErrorAction SilentlyContinue
     exit 1
 }

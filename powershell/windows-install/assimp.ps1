@@ -24,6 +24,7 @@ try{
     # Configure/compile
     cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DASSIMP_BUILD_ASSIMP_TOOLS=OFF -DASSIMP_BUILD_TESTS=OFF -DLIBRARY_SUFFIX="" -DBUILD_TESTING=OFF
     ninja
+    if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\assimp
