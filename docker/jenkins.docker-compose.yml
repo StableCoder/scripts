@@ -1,0 +1,14 @@
+version: '3'
+services:
+  jenkins:
+    container: jenkins
+    image: jenkins/jenkins:latest
+    restart: always
+    ports: 
+      - "8080:80"
+      - "50000:50000"
+    volumes:
+      - JenkinsData:/var/jenkins_home 
+
+volumes:
+  JenkinsData:
