@@ -25,6 +25,7 @@ try {
     # Configure/compile
     cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\portaudio"
     ninja
+    if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\portaudio

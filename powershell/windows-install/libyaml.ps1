@@ -26,12 +26,14 @@ try {
     # Configure/compile
     cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\libyaml" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF
     ninja
+    if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\newton
 
     # Install bin/lib
     ninja install
+    if($LastExitCode -ne 0) { throw }
     
     # Delete our working directory
     cd $invocationDir

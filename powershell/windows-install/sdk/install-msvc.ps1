@@ -4,7 +4,7 @@ Param(
 
 try {
     # Download and install
-    wget https://aka.ms/vs/15/release/vs_$VS_Package.exe -OutFile .\vs_installer.exe -UseBasicParsing
+    wget https://aka.ms/vs/16/release/vs_$VS_Package.exe -OutFile .\vs_installer.exe -UseBasicParsing
     if($VS_Package.equals("buildtools")) {
         Write-Host "MSVC for buildtools"
         .\vs_installer.exe --quiet --wait --norestart --nocache --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.Windows10SDK.$env:WIN10_SDK_VER | Out-Null
