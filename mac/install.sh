@@ -8,7 +8,7 @@ brew install git-lfs cmake ninja
 git lfs install
 
 # Libraries
-brew install bullet glfw assimp glm portaudio freeimage
+brew install bullet glfw assimp glm portaudio freeimage yaml-cpp
 
 # VulkanSDK
 curl -O https://sdk.lunarg.com/sdk/download/latest/mac/vulkan-sdk.tar.gz
