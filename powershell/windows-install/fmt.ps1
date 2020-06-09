@@ -22,7 +22,7 @@ try {
     cd cmake-build
 
     # Configure Compile
-    cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX="C:\fmt"
+    cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\fmt"
     ninja
     if($LastExitCode -ne 0) { throw }
 
