@@ -83,7 +83,7 @@ format_drive() {
     mount /dev/$VOL_GROUP/root /mnt
 
     # Prepare EFI
-    echo -e " ${GREEN}>>${NO_COLOUR} Preparing EFI partition"
+    echo -e " ${GREEN}>>${NO_COLOUR} Installing OS"
     mkfs.fat -F32 "$DRIVE_"1
     mkdir /mnt/boot
     mount "$DRIVE_"1 /mnt/boot
@@ -98,7 +98,6 @@ format_drive() {
     INIT_HOOKS="HOOKS=(base udev autodetect modconf block keyboard encrypt lvm2 filesystems fsck)"
     sed -i "s|^HOOKS=.*|$INIT_HOOKS|" /mnt/etc/mkinitcpio.conf
 
-    echo -e " ${GREEN}>>${NO_COLOUR} Setting up OS"
     arch-chroot /mnt <<-EOF
         set -o errexit
         hwclock --systohc
