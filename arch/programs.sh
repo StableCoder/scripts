@@ -38,9 +38,6 @@ pacman -S --noconfirm qemu docker docker-compose libvirt virt-manager qemu-block
 systemctl enable libvirtd
 systemctl enable docker
 
-systemctl start libvirtd
-systemctl start docker
-
 virsh net-autostart default
 
 usermod -aG docker $(whoami)
