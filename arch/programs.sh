@@ -69,6 +69,15 @@ if [ "$INSTALLBT" == 1 ]; then
     systemctl enable bluetooth
 fi
 
+confirm "Install Steam? [y/N]" && export INSTALLSTEAM=1
+if [ "$INSTALLSTEAM" == 1 ]; then
+    CONFLINE=$(grep -n "\[multilib\]" /etc/pacman.conf | cut -d':' -f1)
+    sudo sed -i "${CONFLINE}s/#\[multilib\]/\[multilib\]/" /etc/pacman.conf
+    CONFLINE=$((CONFLINE + 1))
+    sudo sed -i "${CONFLINE}s/.*/Include = \/etc\/pacman.d\/mirrorlist/" /etc/pacman.conf
+    pacman -S --noconfirm steam
+fi
+
 confirm "Install KDE Plasma DE? [y/N]" && export INSTALLKDE=1
 if [ "$INSTALLKDE" == 1 ]; then
     pacman -S --noconfirm plasma kdeplasma-addons papirus-icon-theme
