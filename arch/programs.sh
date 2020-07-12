@@ -35,8 +35,8 @@ pacman -S --noconfirm code vim kate
 # Virtualization
 pacman -S --noconfirm qemu docker docker-compose libvirt virt-manager qemu-block-gluster glusterfs ebtables dnsmasq
 
-systemctl enable libvirtd
-systemctl enable docker
+systemctl start libvirtd
+systemctl start docker
 
 usermod -aG docker $(whoami)
 usermod -aG libvirt $(whoami)
