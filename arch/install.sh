@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/bin/env bash
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+NO_COLOUR='\033[0m'
 
 DRIVE="$2"
 SWAP_SIZE="${SWAP_SIZE-16G}"
@@ -38,23 +41,25 @@ format_drive() {
     # Collect Setup params
     DISK_PASSWORD=""
     while [ -z "$DISK_PASSWORD" ]; do
-        echo -n " >> Set DISK Password:"
+        echo -n -e " ${CYAN}>>${NO_COLOUR} Set DISK Password:"
         read -s -r TEMP_PWORD
         echo
-        echo -n " >> Confirm DISK Password:"
+        echo -n -e " ${CYAN}>>${NO_COLOUR} Confirm DISK Password:"
         read -s -r TEMP_PWORD_2
         echo
         if [ "$TEMP_PWORD" == "$TEMP_PWORD_2" ]; then DISK_PASSWORD="$TEMP_PWORD"; fi
     done
-    echo -n " >> Set hostname: "
+    echo -n -e " ${CYAN}>>${NO_COLOUR} Set hostname: "
     read _HOSTNAME
-    echo -n " >> Set locale [en_US.UTF-8]: "
+    echo -n -e " ${CYAN}>>${NO_COLOUR} Set locale [en_US.UTF-8]: "
     read _LOCALE
     _LOCALE="${_LOCALE:-en_US.UTF-8}"
-    echo -n " >> Set timezone [America/Toronto]: "
+    echo -n -e " ${CYAN}>>${NO_COLOUR} Set timezone [America/Toronto]: "
     read TIMEZONE
     TIMEZONE="${TIMEZONE:-America/Toronto}"
-    echo " >>>> Running..."
+    confirm " >> Install NetworkManager for networking? [y/N]" && export INSTALLNM=1
+    confirm " >> Install Bluetooth support? [y/N]" && export INSTALLBT=1
+    echo -e " ${GREEN}>>${NO_COLOUR} Running..."
 
     # Wipe and format drive
     if [ SHRED_DRIVE == 1 ]; then
@@ -120,9 +125,6 @@ EOF
     UUID=$(blkid "$DRIVE_"2 | cut -d'"' -f2)
     echo "options cryptdevice=UUID=$UUID:volume root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/boot/loader/entries/arch.conf
 
-    echo " >>>> Setup complete!"
-
-    confirm "Install NetworkManager for networking? [y/N]" && export INSTALLNM=1
     if [ "$INSTALLNM" == 1 ]; then
         arch-chroot /mnt <<-EOF
         pacman -S --noconfirm networkmanager
@@ -130,7 +132,6 @@ EOF
 EOF
     fi
 
-    confirm "Install Bluetooth support? [y/N]" && export INSTALLBT=1
     if [ "$INSTALLBT" == 1 ]; then
         arch-chroot /mnt <<-EOF
         pacman -S --noconfirm bluez bluez-utils
@@ -138,7 +139,8 @@ EOF
 EOF
     fi
 
-    echo " >> Be sure to set root password!"
+    echo -e " ${GREEN}>>${NO_COLOUR} Setup complete!"
+    echo -e " ${GREEN}>>${NO_COLOUR} Be sure to set root password! ${GREEN}<<${NO_COLOUR}"
 }
 
 # Support nvme drives

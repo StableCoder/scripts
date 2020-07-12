@@ -41,6 +41,8 @@ systemctl enable docker
 usermod -aG docker $(whoami)
 usermod -aG libvirt $(whoami)
 
+virsh net-autostart default
+
 # Other Applications
 pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine keepassxc rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip aws-cli eog gwenview
 # GStreamer plugins
