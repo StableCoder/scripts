@@ -63,6 +63,7 @@ format_drive() {
     echo -e " ${GREEN}>>${NO_COLOUR} Running..."
 
     # Wipe and format drive
+    echo -e " ${GREEN}>>${NO_COLOUR} Formatting drive"
     if [ SHRED_DRIVE == 1 ]; then
         shred -v -n$SHRED_ITERATIONS "$DRIVE"
     fi
@@ -72,6 +73,7 @@ format_drive() {
     sgdisk -p "$DRIVE"
 
     # Encrypt LVM
+    echo -e " ${GREEN}>>${NO_COLOUR} Encrypting main partition"
     cryptsetup luksFormat --type luks2 "$DRIVE_"2 -q <<<"$DISK_PASSWORD"
     cryptsetup open "$DRIVE_"2 arch_lvm -q <<<"$DISK_PASSWORD"
     pvcreate --dataalignment 1m /dev/mapper/arch_lvm
@@ -81,11 +83,13 @@ format_drive() {
     mount /dev/$VOL_GROUP/root /mnt
 
     # Prepare EFI
+    echo -e " ${GREEN}>>${NO_COLOUR} Preparing EFI partition"
     mkfs.fat -F32 "$DRIVE_"1
     mkdir /mnt/boot
     mount "$DRIVE_"1 /mnt/boot
 
     # Prepare bootloader
+    echo -e " ${GREEN}>>${NO_COLOUR} Preparing bootloader"
     sed -i '6i Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch' /etc/pacman.d/mirrorlist
     timedatectl set-ntp true
     pacstrap /mnt base linux linux-firmware lvm2 vim
@@ -94,6 +98,7 @@ format_drive() {
     INIT_HOOKS="HOOKS=(base udev autodetect modconf block keyboard encrypt lvm2 filesystems fsck)"
     sed -i "s|^HOOKS=.*|$INIT_HOOKS|" /mnt/etc/mkinitcpio.conf
 
+    echo -e " ${GREEN}>>${NO_COLOUR} Setting up OS"
     arch-chroot /mnt <<-EOF
         set -o errexit
         hwclock --systohc
@@ -114,6 +119,7 @@ format_drive() {
 EOF
 
     # Loader Conf
+    echo -e " ${GREEN}>>${NO_COLOUR} Setting up systemd-boot"
     echo "default arch" >/mnt/boot/loader/loader.conf
     echo "timeout 5" >>/mnt/boot/loader/loader.conf
     echo "editor 0" >>/mnt/boot/loader/loader.conf
@@ -127,6 +133,7 @@ EOF
     echo "options cryptdevice=UUID=$UUID:volume root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/boot/loader/entries/arch.conf
 
     if [ "$INSTALLNM" == 1 ]; then
+        echo -e " ${GREEN}>>${NO_COLOUR} Installing NetworkManager"
         arch-chroot /mnt <<-EOF
         pacman -S --noconfirm networkmanager
         systemctl enable NetworkManager
@@ -134,6 +141,7 @@ EOF
     fi
 
     if [ "$INSTALLBT" == 1 ]; then
+        echo -e " ${GREEN}>>${NO_COLOUR} Installing bluetooth"
         arch-chroot /mnt <<-EOF
         pacman -S --noconfirm bluez bluez-utils
         systemctl enable bluetooth
