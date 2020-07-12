@@ -17,7 +17,8 @@ print_usage() {
 }
 
 confirm() {
-    read -r -p "${1:-Are you sure? [y/N]} " response
+    printf "${1:-Are you sure? [y/N]} "
+    read -r -p "" response
     case "$response" in
     [yY][eE][sS] | [yY])
         true
@@ -31,12 +32,12 @@ confirm() {
 format_drive() {
     echo " >> Formatting $DRIVE"
     gdisk -l "$DRIVE"
-    echo -n ' >> Are you sure? Type "YES" to confirm: '
+    echo -n -e " ${CYAN}>>${NO_COLOUR} Are you sure? Type \"YES\" to confirm: "
     _CONFIRM=""
     read _CONFIRM
     if [ "$_CONFIRM" != "YES" ]; then exit 1; fi
 
-    confirm " >> Shred the drive data? [y/N]" && export SHRED_DRIVE=1
+    confirm " ${CYAN}>>${NO_COLOUR} Shred the drive data? [y/N]" && export SHRED_DRIVE=1
 
     # Collect Setup params
     DISK_PASSWORD=""
@@ -57,8 +58,8 @@ format_drive() {
     echo -n -e " ${CYAN}>>${NO_COLOUR} Set timezone [America/Toronto]: "
     read TIMEZONE
     TIMEZONE="${TIMEZONE:-America/Toronto}"
-    confirm " >> Install NetworkManager for networking? [y/N]" && export INSTALLNM=1
-    confirm " >> Install Bluetooth support? [y/N]" && export INSTALLBT=1
+    confirm " ${CYAN}>>${NO_COLOUR} Install NetworkManager for networking? [y/N]" && export INSTALLNM=1
+    confirm " ${CYAN}>>${NO_COLOUR} Install Bluetooth support? [y/N]" && export INSTALLBT=1
     echo -e " ${GREEN}>>${NO_COLOUR} Running..."
 
     # Wipe and format drive
