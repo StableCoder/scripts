@@ -36,16 +36,6 @@ format_drive() {
     confirm " >> Shred the drive data? [y/N]" && export SHRED_DRIVE=1
 
     # Collect Setup params
-    ROOT_PASSWORD=""
-    while [ -z "$ROOT_PASSWORD" ]; do
-        echo -n " >> Set 'root' user Password:"
-        read -s -r TEMP_PWORD
-        echo
-        echo -n " >> Confirm 'root' user Password:"
-        read -s -r TEMP_PWORD_2
-        echo
-        if [ "$TEMP_PWORD" == "$TEMP_PWORD_2" ]; then ROOT_PASSWORD="$TEMP_PWORD"; fi
-    done
     DISK_PASSWORD=""
     while [ -z "$DISK_PASSWORD" ]; do
         echo -n " >> Set DISK Password:"
@@ -130,11 +120,8 @@ EOF
     UUID=$(blkid "$DRIVE_"2 | cut -d'"' -f2)
     echo "options cryptdevice=UUID=$UUID:volume root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/boot/loader/entries/arch.conf
 
-    arch-chroot /mnt <<-EOF
-    echo -e "$ROOT_PASSWORD\n$ROOT_PASSWORD" | passwd
-EOF
-
     echo " >>>> Setup complete!"
+    echo " >> Be sure to set root password!"
 }
 
 # Support nvme drives
