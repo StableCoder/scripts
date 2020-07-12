@@ -38,15 +38,13 @@ pacman -S --noconfirm qemu docker docker-compose libvirt virt-manager qemu-block
 systemctl enable libvirtd
 systemctl enable docker
 
-virsh net-autostart default
-
 usermod -aG docker $(whoami)
 usermod -aG libvirt $(whoami)
 
 # Other Applications
 pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine keepassxc rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip aws-cli
 # GStreamer plugins
-pacman -S --noconfirm gst-plugins-good gst-plugins-bad gst-plugins-ugly gst=libav gstreamer-vaapi
+pacman -S --noconfirm gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gstreamer-vaapi
 ## Productivity
 pacman -S --noconfirm firefox libreoffice-fresh
 
