@@ -69,13 +69,13 @@ if [ "$INSTALLBT" == 1 ]; then
     systemctl enable bluetooth
 fi
 
-confirm "Install Steam? [y/N]" && export INSTALLSTEAM=1
-if [ "$INSTALLSTEAM" == 1 ]; then
+confirm "Enable Multilib (for Steam)? [y/N]" && export INSTALLMULTILIB=1
+if [ "$INSTALLMULTILIB" == 1 ]; then
     CONFLINE=$(grep -n "\[multilib\]" /etc/pacman.conf | cut -d':' -f1)
     sudo sed -i "${CONFLINE}s/#\[multilib\]/\[multilib\]/" /etc/pacman.conf
     CONFLINE=$((CONFLINE + 1))
     sudo sed -i "${CONFLINE}s/.*/Include = \/etc\/pacman.d\/mirrorlist/" /etc/pacman.conf
-    pacman -S --noconfirm steam
+    pacman -Syu
 fi
 
 confirm "Install KDE Plasma DE? [y/N]" && export INSTALLKDE=1
