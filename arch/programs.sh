@@ -42,7 +42,7 @@ usermod -aG docker $(whoami)
 usermod -aG libvirt $(whoami)
 
 # Other Applications
-pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine keepassxc rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip aws-cli
+pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine keepassxc rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip aws-cli eog gwenview
 # GStreamer plugins
 pacman -S --noconfirm gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gstreamer-vaapi
 ## Productivity
@@ -52,18 +52,6 @@ pacman -S --noconfirm firefox libreoffice-fresh
 pacman -S --noconfirm portaudio bullet vulkan-devel glm catch2 libyaml yaml-cpp
 
 # Personalization
-confirm "Install NetworkManager for networking? [y/N]" && export INSTALLNM=1
-if [ "$INSTALLNM" == 1 ]; then
-    pacman -S --noconfirm networkmanager
-    systemctl enable NetworkManager
-fi
-
-confirm "Install Bluetooth support? [y/N]" && export INSTALLBT=1
-if [ "$INSTALLBT" == 1 ]; then
-    pacman -S --noconfirm bluez bluez-utils
-    systemctl enable bluetooth
-fi
-
 confirm "Enable Multilib (for Steam)? [y/N]" && export INSTALLMULTILIB=1
 if [ "$INSTALLMULTILIB" == 1 ]; then
     CONFLINE=$(grep -n "\[multilib\]" /etc/pacman.conf | cut -d':' -f1)
@@ -76,6 +64,7 @@ fi
 confirm "Install KDE Plasma DE? [y/N]" && export INSTALLKDE=1
 if [ "$INSTALLKDE" == 1 ]; then
     pacman -S --noconfirm plasma kdeplasma-addons papirus-icon-theme
+    pacman -Rs --noconfirm discover
 fi
 
 confirm "Install Deepin DE? [y/N]" && export INSTALLDEEPIN=1

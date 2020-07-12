@@ -121,6 +121,23 @@ EOF
     echo "options cryptdevice=UUID=$UUID:volume root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/boot/loader/entries/arch.conf
 
     echo " >>>> Setup complete!"
+
+    confirm "Install NetworkManager for networking? [y/N]" && export INSTALLNM=1
+    if [ "$INSTALLNM" == 1 ]; then
+        arch-chroot /mnt <<-EOF
+        pacman -S --noconfirm networkmanager
+        systemctl enable NetworkManager
+EOF
+    fi
+
+    confirm "Install Bluetooth support? [y/N]" && export INSTALLBT=1
+    if [ "$INSTALLBT" == 1 ]; then
+        arch-chroot /mnt <<-EOF
+        pacman -S --noconfirm bluez bluez-utils
+        systemctl enable bluetooth
+EOF
+    fi
+
     echo " >> Be sure to set root password!"
 }
 
