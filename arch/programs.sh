@@ -28,12 +28,12 @@ confirm() {
 ## Base Compilers
 pacman -S --noconfirm base-devel gcc clang llvm gdb lldb lld python go rust
 ## Dev Support Tools
-pacman -S --noconfirm doxygen cppcheck valgrind massif-visualizer git git-lfs subversion cmake make ninja
+pacman -S --noconfirm doxygen cppcheck valgrind massif-visualizer git git-lfs subversion cmake make ninja graphviz
 ## Editors
 pacman -S --noconfirm code vim kate
 
 # Virtualization
-pacman -S --noconfirm qemu docker docker-compose libvirt virt-manager qemu-block-gluster glusterfs ebtables dnsmasq
+pacman -S --noconfirm qemu docker docker-compose libvirt virt-manager qemu-block-gluster glusterfs ebtables dnsmasq edk2-ovmf
 
 systemctl start libvirtd
 systemctl start docker
@@ -44,14 +44,16 @@ usermod -aG libvirt $(whoami)
 virsh net-autostart default
 
 # Other Applications
-pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine keepassxc rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip aws-cli eog gwenview
+pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine keepassxc rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip aws-cli eog gwenview vlc htop
 # GStreamer plugins
 pacman -S --noconfirm gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gstreamer-vaapi
-## Productivity
-pacman -S --noconfirm firefox libreoffice-fresh
+# Productivity
+pacman -S --noconfirm firefox libreoffice-fresh blender
+# Fonts
+pacman -S --noconfirm awesome-terminal-fonts powerline-fonts
 
 # Development Libaries
-pacman -S --noconfirm portaudio bullet vulkan-devel glm catch2 libyaml yaml-cpp
+pacman -S --noconfirm assimp portaudio bullet vulkan-devel fmt glm glfw freeimage catch2 libyaml yaml-cpp
 
 # Personalization
 confirm "Enable Multilib (for Steam)? [y/N]" && export INSTALLMULTILIB=1
@@ -65,7 +67,7 @@ fi
 
 confirm "Install KDE Plasma DE? [y/N]" && export INSTALLKDE=1
 if [ "$INSTALLKDE" == 1 ]; then
-    pacman -S --noconfirm plasma kdeplasma-addons papirus-icon-theme
+    pacman -S --noconfirm plasma kdeplasma-addons papirus-icon-theme ffmpegthumbs
     pacman -Rs --noconfirm discover
 fi
 

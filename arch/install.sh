@@ -142,7 +142,7 @@ EOF
     if [ "$INSTALLBT" == 1 ]; then
         echo -e " ${GREEN}>>${NO_COLOUR} Installing bluetooth"
         arch-chroot /mnt <<-EOF
-        pacman -S --noconfirm bluez bluez-utils
+        pacman -S --noconfirm bluez bluez-utils pulseaudio-alsa pulseaudio-bluetooth
         systemctl enable bluetooth
 EOF
     fi
