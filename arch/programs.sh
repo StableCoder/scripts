@@ -48,7 +48,7 @@ pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine keepass
 # GStreamer plugins
 pacman -S --noconfirm gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gstreamer-vaapi
 # Productivity
-pacman -S --noconfirm firefox libreoffice-fresh blender
+pacman -S --noconfirm firefox libreoffice-fresh blender okular
 # Fonts
 pacman -S --noconfirm awesome-terminal-fonts powerline-fonts
 
