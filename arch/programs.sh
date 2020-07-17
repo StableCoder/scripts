@@ -28,7 +28,7 @@ confirm() {
 ## Base Compilers
 pacman -S --noconfirm base-devel gcc clang llvm gdb lldb lld python go rust
 ## Dev Support Tools
-pacman -S --noconfirm doxygen cppcheck valgrind massif-visualizer git git-lfs subversion cmake make ninja graphviz
+pacman -S --noconfirm doxygen cppcheck valgrind massif-visualizer git git-lfs subversion cmake make ninja graphviz python-pip
 ## Editors
 pacman -S --noconfirm code vim kate
 
