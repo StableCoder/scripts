@@ -30,6 +30,10 @@ rm /home/gitlab-runner/.bash_logout
 export DOCKER_BUILDKIT=1
 docker build --platform=local -o . git://github.com/docker/buildx
 mkdir -p /home/gitlab-runner/.docker/cli-plugins
+# Copy to root
+cp buildx ~/.docker/cli-plugins/docker-buildx
+# Move to gitlab-runner user
 mv buildx /home/gitlab-runner/.docker/cli-plugins/docker-buildx
 
+# Gitlab-runner user configuration
 chown -R gitlab-runner:gitlab-runner /home/gitlab-runner
