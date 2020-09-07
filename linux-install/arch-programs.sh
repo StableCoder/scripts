@@ -33,7 +33,7 @@ pacman -S --noconfirm doxygen cppcheck valgrind massif-visualizer git git-lfs su
 pacman -S --noconfirm code vim kate
 
 # Virtualization
-pacman -S --noconfirm qemu docker docker-compose libvirt virt-manager qemu-block-gluster glusterfs ebtables dnsmasq edk2-ovmf
+pacman -S --noconfirm docker docker-compose libvirt virt-manager qemu qemu-arch-extra qemu-block-gluster glusterfs ebtables dnsmasq edk2-ovmf
 
 systemctl start libvirtd
 systemctl start docker
