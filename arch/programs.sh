@@ -47,6 +47,8 @@ virsh net-autostart default
 pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine keepassxc rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip aws-cli eog gwenview vlc htop
 # GStreamer plugins
 pacman -S --noconfirm gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gstreamer-vaapi
+# Archives
+pacman -S p7zip unrar unarchiver lzop lrzip
 # Productivity
 pacman -S --noconfirm firefox libreoffice-fresh blender okular
 # Fonts
@@ -67,7 +69,7 @@ fi
 
 confirm "Install KDE Plasma DE? [y/N]" && export INSTALLKDE=1
 if [ "$INSTALLKDE" == 1 ]; then
-    pacman -S --noconfirm plasma kdeplasma-addons papirus-icon-theme ffmpegthumbs
+    pacman -S --noconfirm plasma kdeplasma-addons papirus-icon-theme ffmpegthumbs ark
     pacman -Rs --noconfirm discover
 fi
 
