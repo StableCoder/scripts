@@ -44,7 +44,7 @@ usermod -aG libvirt $(whoami)
 virsh net-autostart default
 
 # Other Applications
-pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine keepassxc rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip aws-cli eog gwenview vlc htop elisa
+pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine keepassxc rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip aws-cli eog gwenview vlc htop elisa usbutils
 # GStreamer plugins
 pacman -S --noconfirm gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gstreamer-vaapi
 # Archives
