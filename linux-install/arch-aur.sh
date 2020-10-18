@@ -6,11 +6,11 @@ sed -i "s/CXXFLAGS=\"-march=x86-64 -O2 -mtune=generic -pipe -fno-plt\"/CXXFLAGS=
 sed -i "s/#MAKEFLAGS=\"-j2\"/MAKEFLAGS=\"-j$(nproc)\"/g" /etc/makepkg.conf
 
 # AUR
-git clone https://aur.archlinux.org/yay.git
-cd yay
+git clone https://aur.archlinux.org/pikaur.git
+cd pikaur
 makepkg -si --noconfirm
 cd ..
-rm -rf yay
+rm -rf pikaur
 
 # AUR Packages
-yay -S --noconfirm --nodiffmenu --noeditmenu --noupgrademenu --afterclean bloaty cmake-format cppreference monofonto renderdoc nordvpn yay pikaur
+pikaur -S --noconfirm --nodiff --noedit bloaty cmake-format cppreference monofonto renderdoc nordvpn pikaur

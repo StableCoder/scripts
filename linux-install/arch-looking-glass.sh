@@ -10,7 +10,7 @@ if [ "$user" == "root" ] || [ "$user" == "" ]; then
     exit 1
 fi
 
-runuser -l $user -c 'yay -S --noconfirm --nodiffmenu --noeditmenu --noupgrademenu --afterclean looking-glass obs-plugin-looking-glass-git'
+runuser -l $(whoami) -c 'pikaur -S --noconfirm looking-glass obs-plugin-looking-glass-git'
 
 cat >/usr/local/bin/init-looking-glass-file.sh <<EOF
 #!/usr/bin/env sh
