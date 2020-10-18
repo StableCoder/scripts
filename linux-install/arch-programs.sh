@@ -48,7 +48,7 @@ pacman -S --noconfirm dolphin konsole cool-retro-term openssh clementine keepass
 # GStreamer plugins
 pacman -S --noconfirm gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gstreamer-vaapi
 # Archives
-pacman -S p7zip unrar unarchiver lzop lrzip
+pacman -S --noconfirm p7zip unrar unarchiver lzop lrzip
 # Productivity
 pacman -S --noconfirm firefox libreoffice-fresh blender okular
 # Fonts
