@@ -13,4 +13,4 @@ cd ..
 rm -rf yay
 
 # AUR Packages
-yay -S --noconfirm --nodiffmenu --noeditmenu --noupgrademenu --afterclean bloaty cmake-format cppreference monofonto renderdoc nordvpn yay
+yay -S --noconfirm --nodiffmenu --noeditmenu --noupgrademenu --afterclean bloaty cmake-format cppreference monofonto renderdoc nordvpn yay pikaur
