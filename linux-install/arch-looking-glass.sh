@@ -14,6 +14,7 @@ runuser -l $(whoami) -c 'pikaur -S --noconfirm looking-glass obs-plugin-looking-
 
 cat >/usr/local/bin/init-looking-glass-file.sh <<EOF
 #!/usr/bin/env sh
+
 touch /dev/shm/looking-glass
 chmod 0660 /dev/shm/looking-glass
 chown rarity:kvm /dev/shm/looking-glass
