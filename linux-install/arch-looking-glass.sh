@@ -17,7 +17,7 @@ cat >/usr/local/bin/init-looking-glass-file.sh <<EOF
 
 touch /dev/shm/looking-glass
 chmod 0660 /dev/shm/looking-glass
-chown rarity:kvm /dev/shm/looking-glass
+chown $(whoami):kvm /dev/shm/looking-glass
 EOF
 
 chmod +x /usr/local/bin/init-looking-glass-file.sh
