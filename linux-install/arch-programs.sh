@@ -58,6 +58,13 @@ pacman -S --noconfirm awesome-terminal-fonts powerline-fonts
 pacman -S --noconfirm assimp portaudio bullet vulkan-devel fmt glm glfw freeimage catch2 libyaml yaml-cpp
 
 # Personalization
+confirm "Update the makepkg configuration? [y/N]" && export UPDATEMKEPKGCONF=1
+if [[ $UPDATEMKEPKGCONF -eq 1 ]]; then
+    sed -i "s/CFLAGS=\"-march=x86-64 -O2 -mtune=generic -pipe -fno-plt\"/CFLAGS=\"-march=native -O3 -pipe -fno-plt\"/g" /etc/makepkg.conf
+    sed -i "s/CXXFLAGS=\"-march=x86-64 -O2 -mtune=generic -pipe -fno-plt\"/CXXFLAGS=\"-march=native -O3 -pipe -fno-plt\"/g" /etc/makepkg.conf
+    sed -i "s/#MAKEFLAGS=\"-j2\"/MAKEFLAGS=\"-j$(nproc)\"/g" /etc/makepkg.conf
+fi
+
 confirm "Enable Multilib (for Steam)? [y/N]" && export INSTALLMULTILIB=1
 if [ "$INSTALLMULTILIB" == 1 ]; then
     CONFLINE=$(grep -n "\[multilib\]" /etc/pacman.conf | cut -d':' -f1)
