@@ -29,7 +29,7 @@ try {
     if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\newton
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\libyaml
 
     # Install bin/lib
     ninja install
