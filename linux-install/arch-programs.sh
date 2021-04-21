@@ -71,7 +71,7 @@ fi
 
 confirm "Install KDE Plasma DE? [y/N]" && export INSTALLKDE=1
 if [ "$INSTALLKDE" == 1 ]; then
-    pacman -S --noconfirm plasma kdeplasma-addons papirus-icon-theme ffmpegthumbs ark
+    pacman -S --noconfirm plasma kdeplasma-addons papirus-icon-theme ffmpegthumbs ark kimageformats qt5-imageformats qt6-imageformats
     pacman -Rs --noconfirm discover
 fi
 
