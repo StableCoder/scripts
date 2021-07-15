@@ -60,7 +60,13 @@ format_drive() {
     TIMEZONE="${TIMEZONE:-America/Toronto}"
     confirm " ${CYAN}>>${NO_COLOUR} Install NetworkManager for networking? [y/N]" && export INSTALLNM=1
     confirm " ${CYAN}>>${NO_COLOUR} Install Bluetooth support? [y/N]" && export INSTALLBT=1
+    confirm " ${CYAN}>>${NO_COLOUR} Change pacman to allow parallel downloads? [y/N]" && export PARALLEL_PACMAN=1
     echo -e " ${GREEN}>>${NO_COLOUR} Running..."
+
+    if [[ PARALLEL_PACMAN -eq 1 ]]; then
+        # Change the installer medium to also use parallel downloads
+        sed -i 's/#ParallelDownloads/ParallelDownloads/g' /etc/pacman.conf
+    fi
 
     # Wipe and format drive
     echo -e " ${GREEN}>>${NO_COLOUR} Formatting drive"
@@ -145,6 +151,11 @@ EOF
         pacman -S --noconfirm bluez bluez-utils pulseaudio-alsa pulseaudio-bluetooth
         systemctl enable bluetooth
 EOF
+    fi
+
+    if [[ PARALLEL_PACMAN -eq 1 ]]; then
+        echo -e " ${GREEN}>>${NO_COLOUR} Changing pacman to use parallel downloads"
+        sed -i 's/#ParallelDownloads/ParallelDownloads/g' /etc/pacman.conf
     fi
 
     echo -e " ${GREEN}>>${NO_COLOUR} Setup complete!"
