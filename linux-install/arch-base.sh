@@ -50,6 +50,16 @@ format_drive() {
         echo
         if [ "$TEMP_PWORD" == "$TEMP_PWORD_2" ]; then DISK_PASSWORD="$TEMP_PWORD"; fi
     done
+    ROOT_PASSWORD=""
+    while [ -z "$ROOT_PASSWORD" ]; do
+        echo -n -e " ${CYAN}>>${NO_COLOUR} Set ROOT USER Password:"
+        read -s -r TEMP_PWORD
+        echo
+        echo -n -e " ${CYAN}>>${NO_COLOUR} Confirm ROOT USER Password:"
+        read -s -r TEMP_PWORD_2
+        echo
+        if [ "$TEMP_PWORD" == "$TEMP_PWORD_2" ]; then ROOT_PASSWORD="$TEMP_PWORD"; fi
+    done
     echo -n -e " ${CYAN}>>${NO_COLOUR} Set hostname: "
     read _HOSTNAME
     echo -n -e " ${CYAN}>>${NO_COLOUR} Set locale [en_US.UTF-8]: "
@@ -127,6 +137,8 @@ format_drive() {
         echo -e "${GREEN}>>${NO_COLOUR} Installing bootloader (mkinitcpio/bootctl)"
         mkinitcpio -p linux
         bootctl install
+        echo -e "${GREEN}>>${NO_COLOUR} Setting the root user password"
+        echo root:$ROOT_PASSWORD | chpasswd
 EOF
 
     # Loader Conf
@@ -166,7 +178,6 @@ EOF
     fi
 
     echo -e " ${GREEN}>>${NO_COLOUR} Setup complete!"
-    echo -e " ${GREEN}>>${NO_COLOUR} Be sure to set root password! ${GREEN}<<${NO_COLOUR}"
 }
 
 # Support nvme drives
