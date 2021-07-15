@@ -106,29 +106,36 @@ format_drive() {
 
     arch-chroot /mnt <<-EOF
         set -o errexit
+        echo -e "${GREEN}>>${NO_COLOUR} Setting to hardware clock"
         hwclock --systohc
+        echo -e "${GREEN}>>${NO_COLOUR} Setting up local hostname"
         echo "$_HOSTNAME" >> /etc/hostname
         echo "127.0.0.1 $_HOSTNAME" >> /etc/hosts
         echo "::1 $_HOSTNAME" >> /etc/hosts
         echo "127.0.1.1 $_HOSTNAME.localdomain $_HOSTNAME" >> /etc/hosts
+        echo -e "${GREEN}>>${NO_COLOUR} Setting up locale"
         sed -i "s|#\($_LOCALE.*\)\$|\1|" /etc/locale.gen
         locale-gen
         echo "LANG=$_LOCALE" >> /etc/locale.conf
+        echo -e "${GREEN}>>${NO_COLOUR} Setting up timezone"
         ln -sf "/usr/share/zoneinfo/$TIMEZONE" /etc/localtime
         # Install microcode updates
+        echo -e "${GREEN}>>${NO_COLOUR} Installing appropriate micro-code"
         cat /proc/cpuinfo | grep -q GenuineIntel && pacman -S --noconfirm intel-ucode 
         cat /proc/cpuinfo | grep -q AuthenticAMD && pacman -S --noconfirm amd-ucode
         # Install bootloaders
+        echo -e "${GREEN}>>${NO_COLOUR} Installing bootloader (mkinitcpio/bootctl)"
         mkinitcpio -p linux
         bootctl install
 EOF
 
     # Loader Conf
-    echo -e " ${GREEN}>>${NO_COLOUR} Setting up systemd-boot"
+    echo -e " ${GREEN}>>${NO_COLOUR} Setting up systemd-boot (loader.conf)"
     echo "default arch" >/mnt/boot/loader/loader.conf
     echo "timeout 5" >>/mnt/boot/loader/loader.conf
     echo "editor 0" >>/mnt/boot/loader/loader.conf
     # Arch Loader Entry Conf
+    echo -e " ${GREEN}>>${NO_COLOUR} Setting up systemd-boot (arch.conf)"
     echo "title Arch Linux" >/mnt/boot/loader/entries/arch.conf
     echo "linux /vmlinuz-linux" >>/mnt/boot/loader/entries/arch.conf
     cat /proc/cpuinfo | grep -q GenuineIntel && echo "initrd /intel-ucode.img" >>/mnt/boot/loader/entries/arch.conf
