@@ -114,6 +114,11 @@ if [ "$INSTALLI3" == 1 ]; then
     pacman -S --noconfirm i3-gaps i3status i3lock feh dmenu xbacklight
 fi
 
+confirm " ${CYAN}>>${NO_COLOUR} Install Syncthing? [y/N]" && export SYNCTHING=1
+if [ "$SYNCTHING" == 1 ]; then
+    pacman -S --noconfirm syncthing
+fi
+
 # Other Applications
 pacman -S --noconfirm dolphin konsole cool-retro-term openssh keepassxc rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip aws-cli htop usbutils
 # Media
