@@ -131,5 +131,5 @@ pacman -S --noconfirm firefox libreoffice-fresh blender okular
 pacman -S --noconfirm awesome-terminal-fonts powerline-fonts
 # Streaming
 pacman -S --noconfirm obs-studio
-# Video Editing
-pacman -S kdenlive mlt
+# Video Editing/Processing
+pacman -S kdenlive mlt rtaudio sox movit rubberband sdl opencv
