@@ -40,16 +40,20 @@ format_drive() {
     confirm " ${CYAN}>>${NO_COLOUR} Shred the drive data? [y/N]" && export SHRED_DRIVE=1
 
     # Collect Setup params
-    DISK_PASSWORD=""
-    while [ -z "$DISK_PASSWORD" ]; do
-        echo -n -e " ${CYAN}>>${NO_COLOUR} Set DISK Password:"
-        read -s -r TEMP_PWORD
-        echo
-        echo -n -e " ${CYAN}>>${NO_COLOUR} Confirm DISK Password:"
-        read -s -r TEMP_PWORD_2
-        echo
-        if [ "$TEMP_PWORD" == "$TEMP_PWORD_2" ]; then DISK_PASSWORD="$TEMP_PWORD"; fi
-    done
+    ENCRYPT_DRIVE=1
+    confirm " ${CYAN}>>${NO_COLOUR} Skip encrypting the drive? [y/N]" && export ENCRYPT_DRIVE=0
+    if [ -z $ENCRYPT_DRIVE ]; then
+        DISK_PASSWORD=""
+        while [ -z "$DISK_PASSWORD" ]; do
+            echo -n -e " ${CYAN}>>${NO_COLOUR} Set DISK Password:"
+            read -s -r TEMP_PWORD
+            echo
+            echo -n -e " ${CYAN}>>${NO_COLOUR} Confirm DISK Password:"
+            read -s -r TEMP_PWORD_2
+            echo
+            if [ "$TEMP_PWORD" == "$TEMP_PWORD_2" ]; then DISK_PASSWORD="$TEMP_PWORD"; fi
+        done
+    fi
     ROOT_PASSWORD=""
     while [ -z "$ROOT_PASSWORD" ]; do
         echo -n -e " ${CYAN}>>${NO_COLOUR} Set ROOT USER Password:"
@@ -89,14 +93,22 @@ format_drive() {
     sgdisk -p "$DRIVE"
 
     # Encrypt LVM
-    echo -e " ${GREEN}>>${NO_COLOUR} Encrypting main partition"
-    cryptsetup luksFormat --type luks2 "$DRIVE_"2 -q <<<"$DISK_PASSWORD"
-    cryptsetup open "$DRIVE_"2 arch_lvm -q <<<"$DISK_PASSWORD"
-    pvcreate --dataalignment 1m /dev/mapper/arch_lvm
-    vgcreate $VOL_GROUP /dev/mapper/arch_lvm
-    lvcreate -l 100%FREE $VOL_GROUP -n root
-    mkfs.ext4 /dev/$VOL_GROUP/root
-    mount /dev/$VOL_GROUP/root /mnt
+    if [ -z $ENCRYPT_DRIVE ]; then
+        echo -e " ${GREEN}>>${NO_COLOUR} Encrypting main partition"
+        cryptsetup luksFormat --type luks2 "$DRIVE_"2 -q <<<"$DISK_PASSWORD"
+        cryptsetup open "$DRIVE_"2 arch_lvm -q <<<"$DISK_PASSWORD"
+        pvcreate --dataalignment 1m /dev/mapper/arch_lvm
+        vgcreate $VOL_GROUP /dev/mapper/arch_lvm
+        lvcreate -l 100%FREE $VOL_GROUP -n root
+        mkfs.ext4 /dev/$VOL_GROUP/root
+        mount /dev/$VOL_GROUP/root /mnt
+    else
+        pvcreate --dataalignment 1m "$DRIVE_"2
+        vgcreate $VOL_GROUP "$DRIVE_"2
+        lvcreate -l 100%FREE $VOL_GROUP -n root
+        mkfs.ext4 /dev/$VOL_GROUP/root
+        mount /dev/$VOL_GROUP/root /mnt
+    fi
 
     # Prepare EFI
     echo -e " ${GREEN}>>${NO_COLOUR} Installing OS"
@@ -111,7 +123,11 @@ format_drive() {
     pacstrap /mnt base linux linux-firmware lvm2 vim
     genfstab -U /mnt >>/mnt/etc/fstab
     # Edit /etc/mkinitcpio.conf
-    INIT_HOOKS="HOOKS=(base udev autodetect modconf block keyboard encrypt lvm2 filesystems fsck)"
+    if [ -z $ENCRYPT_DRIVE ]; then
+        INIT_HOOKS="HOOKS=(base udev autodetect modconf block keyboard encrypt lvm2 filesystems fsck)"
+    else
+        INIT_HOOKS="HOOKS=(base udev autodetect modconf block lvm2 filesystems fsck)"
+    fi
     sed -i "s|^HOOKS=.*|$INIT_HOOKS|" /mnt/etc/mkinitcpio.conf
 
     arch-chroot /mnt <<-EOF
@@ -154,7 +170,11 @@ EOF
     cat /proc/cpuinfo | grep -q AuthenticAMD && echo "initrd /amd-ucode.img" >>/mnt/boot/loader/entries/arch.conf
     echo "initrd /initramfs-linux.img" >>/mnt/boot/loader/entries/arch.conf
     UUID=$(blkid "$DRIVE_"2 | cut -d'"' -f2)
-    echo "options cryptdevice=UUID=$UUID:volume root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/boot/loader/entries/arch.conf
+     if [ -z $ENCRYPT_DRIVE ]; then
+        echo "options cryptdevice=UUID=$UUID:volume root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/boot/loader/entries/arch.conf
+    else
+        echo "options root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/boot/loader/entries/arch.conf
+    fi
 
     if [ "$INSTALLNM" == 1 ]; then
         echo -e " ${GREEN}>>${NO_COLOUR} Installing NetworkManager"
