@@ -132,7 +132,7 @@ fi
 
 # Video Editing/Processing
 if confirm " ${CYAN}>>${NO_COLOUR} Install video editing/processing? [y/N]"; then
-    pacman -S kdenlive mlt rtaudio sox movit rubberband sdl opencv
+    pacman -S --noconfirm kdenlive mlt rtaudio sox movit rubberband sdl opencv
 fi
 
 # Fonts
