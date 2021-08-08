@@ -20,6 +20,14 @@ confirm() {
     esac
 }
 
+# User creation
+echo -n -e " ${CYAN}>>${NO_COLOUR} Enter set of users to be created:"
+read -s -r USER_LIST
+for USER in $USER_LIST; do
+    useradd -m $USER
+done
+echo
+
 # sudo
 confirm " ${CYAN}>>${NO_COLOUR} Install sudo? [y/N]" && export SUDO=1
 if [[ $SUDO -eq 1 ]]; then
