@@ -27,6 +27,7 @@ usermod -aG docker gitlab-runner
 rm /home/gitlab-runner/.bash_logout
 
 # Buildx
+mkdir -p ~/.docker/cli-plugins
 export DOCKER_BUILDKIT=1
 docker build --platform=local -o . git://github.com/docker/buildx
 mkdir -p /home/gitlab-runner/.docker/cli-plugins
