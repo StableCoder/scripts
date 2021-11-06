@@ -39,9 +39,9 @@ format_drive() {
     SHRED_ITERATIONS="${SHRED_ITERATIONS-1}"
 
     # Collect Setup params
-    ENCRYPT_DRIVE=1
-    confirm " ${CYAN}>>${NO_COLOUR} Skip encrypting the drive? [y/N]" && export ENCRYPT_DRIVE=0
-    if [ -z $ENCRYPT_DRIVE ]; then
+    ENCRYPT_DRIVE=
+    confirm " ${CYAN}>>${NO_COLOUR} Skip encrypting the drive? [y/N]" && export ENCRYPT_DRIVE=1
+    if [ ! -z $ENCRYPT_DRIVE ]; then
         DISK_PASSWORD=""
         while [ -z "$DISK_PASSWORD" ]; do
             echo -n -e " ${CYAN}>>${NO_COLOUR} Set DISK Password:"
@@ -106,7 +106,7 @@ format_drive() {
     sgdisk -p "$DRIVE"
 
     # Encrypt LVM
-    if [ -z $ENCRYPT_DRIVE ]; then
+    if [ ! -z $ENCRYPT_DRIVE ]; then
         echo -e " ${GREEN}>>${NO_COLOUR} Encrypting main partition"
         cryptsetup luksFormat --type luks2 "$DRIVE_"2 -q <<<"$DISK_PASSWORD"
         cryptsetup open "$DRIVE_"2 arch_lvm -q <<<"$DISK_PASSWORD"
