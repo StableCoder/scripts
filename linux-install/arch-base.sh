@@ -78,15 +78,15 @@ format_drive() {
     # Partition Info
     printf " ${CYAN}>>${NO_COLOUR} Enter the size of the created LVM partition (+G/-G/0, default: 0): "
     read LVM_PARTITION_SIZE
-    LVM_PARTITION_SIZE="${LVM_PARTITION_SIZE-0}"
+    LVM_PARTITION_SIZE="${LVM_PARTITION_SIZE:-0}"
 
     printf " ${CYAN}>>${NO_COLOUR} Enter the LVM volume name (default: STec): "
     read VOL_GROUP
-    VOL_GROUP="${VOL_GROUP-STec}"
+    VOL_GROUP="${VOL_GROUP:-STec}"
 
     printf " ${CYAN}>>${NO_COLOUR} Enter the %% of free space (#%%FREE) or GB size (50G) of the LVM partition to use for the root filesystem (default: 100%%FREE): "
     read ROOT_SIZE
-    ROOT_SIZE="${ROOT_SIZE-0}"
+    ROOT_SIZE="${ROOT_SIZE:-100%FREE}"
 
     echo -e " ${GREEN}>>${NO_COLOUR} Running..."
 
