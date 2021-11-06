@@ -39,8 +39,8 @@ format_drive() {
     SHRED_ITERATIONS="${SHRED_ITERATIONS-1}"
 
     # Collect Setup params
-    ENCRYPT_DRIVE=
-    confirm " ${CYAN}>>${NO_COLOUR} Skip encrypting the drive? [y/N]" && export ENCRYPT_DRIVE=1
+    ENCRYPT_DRIVE=1
+    confirm " ${CYAN}>>${NO_COLOUR} Skip encrypting the drive? [y/N]" && export ENCRYPT_DRIVE=
     if [ ! -z $ENCRYPT_DRIVE ]; then
         DISK_PASSWORD=""
         while [ -z "$DISK_PASSWORD" ]; do
