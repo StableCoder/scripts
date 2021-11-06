@@ -2,10 +2,12 @@ $invocationDir = (Get-Item -Path ".\").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
+    Write-Host "Creating working directory"
     mkdir freeimage-workdir
     cd freeimage-workdir
 
     # Download/Extract the source code
+    Write-Host "Downloading/extracting source"
     Invoke-WebRequest -Uri "https://sourceforge.net/projects/freeimage/files/Binary Distribution/3.18.0/FreeImage3180Win32Win64.zip/download" -OutFile FreeImage.zip -UserAgent [Microsoft.PowerShell.Commands.PSUserAgent]::Chrome
     7z x FreeImage.zip
 

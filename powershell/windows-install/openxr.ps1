@@ -7,10 +7,12 @@ $invocationDir = (Get-Item -Path ".\").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
+    Write-Host "Creating working directory"
     mkdir openxr-workdir
     cd openxr-workdir
 
     # Download/Extract the source code
+    Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/KhronosGroup/OpenXR-SDK/archive/release-${env:OPENXR_VER}.tar.gz -OutFile openxr.tar.gz -UseBasicParsing
     7z x -aoa openxr.tar.gz
@@ -20,8 +22,9 @@ try {
     cd OpenXR-SDK-release-${env:OPENXR_VER}
 
     # Create/enter a separate build directory
-    mkdir cmake-build
-    cd cmake-build
+    Write-Host "Creating build directory"
+    mkdir openxr-build
+    cd openxr-build
 
     # Configure/compile
     cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\openxr-sdk" -DDYNAMIC_LOADER=ON

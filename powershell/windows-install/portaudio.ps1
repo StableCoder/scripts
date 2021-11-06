@@ -7,10 +7,12 @@ $invocationDir = (Get-Item -Path ".\").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
+    Write-Host "Creating working directory"
     mkdir portaudio-workdir
     cd portaudio-workdir
 
     # Download/Extract the source code
+    Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget http://www.portaudio.com/archives/pa_stable_v$env:PORTAUDIO_VER.tgz -OutFile pa_stable_v$env:PORTAUDIO_VER.tgz -UseBasicParsing
     7z x pa_stable_v$env:PORTAUDIO_VER.tgz
@@ -19,8 +21,9 @@ try {
     cd portaudio-src
 
     # Create/enter a separate build directory
-    mkdir cmake-build
-    cd cmake-build
+    Write-Host "Creating build directory"
+    mkdir portaudio-build
+    cd portaudio-build
 
     # Configure/compile
     cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\portaudio"

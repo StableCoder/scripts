@@ -7,16 +7,19 @@ $invocationDir = (Get-Item -Path ".\").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
+    Write-Host "Creating working directory"
     mkdir newton-workdir
     cd newton-workdir
 
     # Download/Extract the source code
+    Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/MADEAPPS/newton-dynamics/archive/master.zip -OutFile newton.zip -UseBasicParsing
     7z x newton.zip
     cd newton-dynamics-master
    
     # Create/enter a separate build directory
+    Write-Host "Creating build directory"
     mkdir cmake-build
     cd cmake-build
     

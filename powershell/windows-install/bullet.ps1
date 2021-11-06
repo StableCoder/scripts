@@ -7,10 +7,12 @@ $invocationDir = (Get-Item -Path ".\").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
+    Write-Host "Creating working directory"
     mkdir bullet-workdir
     cd bullet-workdir
     
     # Download/Extract the source code
+    Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/bulletphysics/bullet3/archive/${env:BULLET_VER}.tar.gz -OutFile bullet.tar.gz -UseBasicParsing
     7z x bullet.tar.gz
@@ -18,6 +20,7 @@ try {
     cd bullet3-${env:BULLET_VER}
 
     # Create/enter a separate build directory
+    Write-Host "Creating build directory"
     mkdir cmake-build
     cd cmake-build
 

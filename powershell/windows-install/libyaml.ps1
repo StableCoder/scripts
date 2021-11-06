@@ -7,10 +7,12 @@ $invocationDir = (Get-Item -Path ".\").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
+    Write-Host "Creating working directory"
     mkdir libyaml-workdir
     cd libyaml-workdir
 
      # Download/Extract the source code
+     Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/yaml/libyaml/archive/${env:LIBYAML_VER}.tar.gz -OutFile libyaml.tar.gz -UseBasicParsing
     7z x -aoa libyaml.tar.gz
@@ -20,8 +22,9 @@ try {
     cd libyaml-${env:LIBYAML_VER}
    
     # Create/enter a separate build directory
-    mkdir cmake-build
-    cd cmake-build
+    Write-Host "Creating build directory"
+    mkdir libyaml-build
+    cd libyaml-build
 
     # Configure/compile
     cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\libyaml" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF

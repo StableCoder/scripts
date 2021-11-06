@@ -7,10 +7,12 @@ $invocationDir = (Get-Item -Path ".\").FullName
 
 try {   
     # Use a working directory, to keep our work self-contained
+    Write-Host "Creating working directory"
     mkdir glfw-workdir
     cd glfw-workdir
 
     # Download/Extract the source code
+    Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/glfw/glfw/releases/download/$env:GLFW_VER/glfw-$env:GLFW_VER.zip -OutFile glfw-$env:GLFW_VER.zip -UseBasicParsing
     7z x glfw-$env:GLFW_VER.zip
@@ -18,6 +20,7 @@ try {
     cd glfw-$env:GLFW_VER
 
     # Create/enter a separate build directory
+    Write-Host "Creating build directory"
     mkdir cmake-build
     cd cmake-build
 

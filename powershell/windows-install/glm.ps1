@@ -7,10 +7,12 @@ $invocationDir = (Get-Item -Path ".\").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
+    Write-Host "Creating working directory"
     mkdir glm-workdir
     cd glm-workdir
 
     # Download/Extract the source code
+    Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/g-truc/glm/releases/download/$env:GLM_VER/glm-$env:GLM_VER.zip -OutFile glm.zip -UseBasicParsing
     7z x glm.zip

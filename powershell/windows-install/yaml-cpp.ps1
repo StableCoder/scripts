@@ -7,18 +7,21 @@ $invocationDir = (Get-Item -Path ".\").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
-    mkdir yaml-cpp-workdir
-    cd yaml-cpp-workdir
+    Write-Host "Creating working directory"
+    mkdir yamlcpp-workdir
+    cd yamlcpp-workdir
 
     # Download/Extract the source code
+    Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/jbeder/yaml-cpp/archive/master.zip -OutFile yaml-cpp.zip -UseBasicParsing
     7z x -aoa yaml-cpp.zip
     cd yaml-cpp-master
 
     # Create/enter a separate build directory
-    mkdir cmake-build
-    cd cmake-build
+    Write-Host "Creating build directory"
+    mkdir yamlcpp-build
+    cd yamlcpp-build
 
     # Configure/compile
     cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\yaml-cpp" -DBUILD_SHARED_LIBS=OFF -DYAML_CPP_BUILD_CONTRIB=OFF -DYAML_CPP_BUILD_TESTS=OFF -DYAML_CPP_BUILD_TOOLS=OFF

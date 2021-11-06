@@ -7,10 +7,12 @@ $invocationDir = (Get-Item -Path ".\").FullName
 
 try{
     # Use a working directory, to keep our work self-contained
+    Write-Host "Creating working directory"
     mkdir assimp-workdir
     cd assimp-workdir
 
     # Download/Extract the source code
+    Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/assimp/assimp/archive/v${env:ASSIMP_VER}.tar.gz -OutFile assimp.tar.gz -UseBasicParsing
     7z x -aoa assimp.tar.gz
@@ -18,6 +20,7 @@ try{
     cd assimp-${env:ASSIMP_VER} 
 
     # Create/enter a separate build directory
+    Write-Host "Creating build directory"
     mkdir cmake-build
     cd cmake-build
 
