@@ -5,15 +5,13 @@ NO_COLOUR='\033[0m'
 
 DRIVE="$2"
 SWAP_SIZE="${SWAP_SIZE-16G}"
-VOL_GROUP="${VOL_GROUP-STec}"
-SHRED_ITERATIONS="${SHRED_ITERATIONS-1}"
 
 # Exit on any error
 set -o errexit
 
 print_usage() {
     echo "Usage: "
-    echo "   arch-install.sh format <device>"
+    echo "   arch-base.sh format <device>"
 }
 
 confirm() {
@@ -37,7 +35,9 @@ format_drive() {
     read _CONFIRM
     if [ "$_CONFIRM" != "YES" ]; then exit 1; fi
 
-    confirm " ${CYAN}>>${NO_COLOUR} Shred the drive data? [y/N]" && export SHRED_DRIVE=1
+    printf " ${CYAN}>>${NO_COLOUR} Number if iterations to shred the drive (default: 1): "
+    read SHRED_ITERATIONS
+    SHRED_ITERATIONS="${SHRED_ITERATIONS-1}"
 
     # Collect Setup params
     ENCRYPT_DRIVE=1
@@ -75,6 +75,20 @@ format_drive() {
     confirm " ${CYAN}>>${NO_COLOUR} Install NetworkManager for networking? [y/N]" && export INSTALLNM=1
     confirm " ${CYAN}>>${NO_COLOUR} Install Bluetooth support? [y/N]" && export INSTALLBT=1
     confirm " ${CYAN}>>${NO_COLOUR} Change pacman to allow parallel downloads? [y/N]" && export PARALLEL_PACMAN=1
+
+    # Partition Info
+    printf " ${CYAN}>>${NO_COLOUR} Enter the size of the created LVM partition (+G/-G/0, default: 0): "
+    read LVM_PARTITION_SIZE
+    LVM_PARTITION_SIZE="${LVM_PARTITION_SIZE-0}"
+
+    printf " ${CYAN}>>${NO_COLOUR} Enter the LVM volume name (default: STec): "
+    read VOL_GROUP
+    VOL_GROUP="${VOL_GROUP-STec}"
+
+    printf " ${CYAN}>>${NO_COLOUR} Enter the %% of free space (#%%FREE) or GB size (50G) of the LVM partition to use for the root filesystem (default: 100%%FREE): "
+    read ROOT_SIZE
+    ROOT_SIZE="${ROOT_SIZE-0}"
+
     echo -e " ${GREEN}>>${NO_COLOUR} Running..."
 
     if [[ PARALLEL_PACMAN -eq 1 ]]; then
@@ -84,12 +98,12 @@ format_drive() {
 
     # Wipe and format drive
     echo -e " ${GREEN}>>${NO_COLOUR} Formatting drive"
-    if [ SHRED_DRIVE == 1 ]; then
+    if [ $SHRED_ITERATIONS -gt 0 ]; then
         shred -v -n$SHRED_ITERATIONS "$DRIVE"
     fi
     sgdisk -o "$DRIVE"
     sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"EFI System Partition" "$DRIVE"
-    sgdisk -n 2:0:0 -t 2:8e00 -c 2:"$VOL_GROUP LVM" "$DRIVE"
+    sgdisk -n 2:0:$LVM_PARTITION_SIZE -t 2:8e00 -c 2:"$VOL_GROUP LVM" "$DRIVE"
     sgdisk -p "$DRIVE"
 
     # Encrypt LVM
@@ -99,13 +113,13 @@ format_drive() {
         cryptsetup open "$DRIVE_"2 arch_lvm -q <<<"$DISK_PASSWORD"
         pvcreate --dataalignment 1m /dev/mapper/arch_lvm
         vgcreate $VOL_GROUP /dev/mapper/arch_lvm
-        lvcreate -l 100%FREE $VOL_GROUP -n root
+        lvcreate -l $ROOT_SIZE $VOL_GROUP -n root
         mkfs.ext4 /dev/$VOL_GROUP/root
         mount /dev/$VOL_GROUP/root /mnt
     else
         pvcreate --dataalignment 1m "$DRIVE_"2
         vgcreate $VOL_GROUP "$DRIVE_"2
-        lvcreate -l 100%FREE $VOL_GROUP -n root
+        lvcreate -l $ROOT_SIZE $VOL_GROUP -n root
         mkfs.ext4 /dev/$VOL_GROUP/root
         mount /dev/$VOL_GROUP/root /mnt
     fi
@@ -170,7 +184,7 @@ EOF
     cat /proc/cpuinfo | grep -q AuthenticAMD && echo "initrd /amd-ucode.img" >>/mnt/boot/loader/entries/arch.conf
     echo "initrd /initramfs-linux.img" >>/mnt/boot/loader/entries/arch.conf
     UUID=$(blkid "$DRIVE_"2 | cut -d'"' -f2)
-     if [ -z $ENCRYPT_DRIVE ]; then
+    if [ -z $ENCRYPT_DRIVE ]; then
         echo "options cryptdevice=UUID=$UUID:volume root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/boot/loader/entries/arch.conf
     else
         echo "options root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/boot/loader/entries/arch.conf
