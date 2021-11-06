@@ -15,7 +15,6 @@ try {
     rm .\vs_installer.exe
 
     # Environment setup
-    [Environment]::SetEnvironmentVariable( "VS_PACKAGE", "$VS_Package", [System.EnvironmentVariableTarget]::Machine )
     Copy-Item -Path entrypoint.ps1 -Destination C:\entrypoint.ps1
     
     Write-Host "MSVC setup complete."
