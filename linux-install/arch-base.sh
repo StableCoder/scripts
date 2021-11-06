@@ -97,7 +97,7 @@ format_drive() {
 
     # Wipe and format drive
     echo -e " ${GREEN}>>${NO_COLOUR} Formatting drive"
-    if [ $SHRED_ITERATIONS -gt 0 ]; then
+    if [[ $SHRED_ITERATIONS -gt 0 ]]; then
         shred -v -n$SHRED_ITERATIONS "$DRIVE"
     fi
     sgdisk -o "$DRIVE"
