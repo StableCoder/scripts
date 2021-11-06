@@ -14,7 +14,7 @@ try {
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget http://www.portaudio.com/archives/pa_stable_v$env:PORTAUDIO_VER.tgz -OutFile pa_stable_v$env:PORTAUDIO_VER.tgz -UseBasicParsing
+    wget http://files.portaudio.com/archives/pa_stable_v$env:PORTAUDIO_VER.tgz -OutFile pa_stable_v$env:PORTAUDIO_VER.tgz -UseBasicParsing
     7z x pa_stable_v$env:PORTAUDIO_VER.tgz
     7z x pa_stable_v$env:PORTAUDIO_VER.tar
     Rename-Item -Path portaudio -NewName portaudio-src
