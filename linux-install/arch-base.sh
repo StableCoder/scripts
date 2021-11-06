@@ -4,7 +4,6 @@ CYAN='\033[0;36m'
 NO_COLOUR='\033[0m'
 
 DRIVE="$2"
-SWAP_SIZE="${SWAP_SIZE-16G}"
 
 # Exit on any error
 set -o errexit
