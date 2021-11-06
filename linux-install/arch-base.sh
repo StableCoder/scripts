@@ -135,6 +135,8 @@ format_drive() {
     timedatectl set-ntp true
     pacstrap /mnt base linux linux-firmware lvm2 vim
     genfstab -U /mnt >>/mnt/etc/fstab
+    echo -e " ${GREEN}>>${NO_COLOUR} Generated filesystem table (fstab):"
+    cat /mnt/etc/fstab
     # Edit /etc/mkinitcpio.conf
     if [ -z $ENCRYPT_DRIVE ]; then
         INIT_HOOKS="HOOKS=(base udev autodetect modconf block keyboard encrypt lvm2 filesystems fsck)"
@@ -143,6 +145,7 @@ format_drive() {
     fi
     sed -i "s|^HOOKS=.*|$INIT_HOOKS|" /mnt/etc/mkinitcpio.conf
 
+    echo -e " ${GREEN}>>${NO_COLOUR} Entering root (chroot)"
     arch-chroot /mnt <<-EOF
         set -o errexit
         echo -e "${GREEN}>>${NO_COLOUR} Setting to hardware clock"
