@@ -138,7 +138,7 @@ format_drive() {
     echo -e " ${GREEN}>>${NO_COLOUR} Generated filesystem table (fstab):"
     cat /mnt/etc/fstab
     # Edit /etc/mkinitcpio.conf
-    if [ -z $ENCRYPT_DRIVE ]; then
+    if [ ! -z $ENCRYPT_DRIVE ]; then
         INIT_HOOKS="HOOKS=(base udev autodetect modconf block keyboard encrypt lvm2 filesystems fsck)"
     else
         INIT_HOOKS="HOOKS=(base udev autodetect modconf block lvm2 filesystems fsck)"
@@ -186,7 +186,7 @@ EOF
     cat /proc/cpuinfo | grep -q AuthenticAMD && echo "initrd /amd-ucode.img" >>/mnt/boot/loader/entries/arch.conf
     echo "initrd /initramfs-linux.img" >>/mnt/boot/loader/entries/arch.conf
     UUID=$(blkid "$DRIVE_"2 | cut -d'"' -f2)
-    if [ -z $ENCRYPT_DRIVE ]; then
+    if [ ! -z $ENCRYPT_DRIVE ]; then
         echo "options cryptdevice=UUID=$UUID:volume root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/boot/loader/entries/arch.conf
     else
         echo "options root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/boot/loader/entries/arch.conf
