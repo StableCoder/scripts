@@ -56,23 +56,15 @@ if confirm " ${CYAN}>>${NO_COLOUR} Install FoE game development libraries? [y/N]
     pacman -S --noconfirm assimp portaudio bullet vulkan-devel fmt glm glfw freeimage catch2 libyaml yaml-cpp
 fi
 
-# Virtualization
-if confirm " ${CYAN}>>${NO_COLOUR} Setup virtualization/docker? [y/N]"; then
+# Virtualization/Containerization
+if confirm " ${CYAN}>>${NO_COLOUR} Setup virtualization/containerization? [y/N]"; then
     echo -e " ${GREEN}>>${NO_COLOUR} iptables-nft will need to replace iptables, and will request permission to do so."
     pacman -S iptables-nft
-    pacman -S --noconfirm docker docker-compose libvirt virt-manager qemu qemu-arch-extra qemu-block-gluster glusterfs ebtables dnsmasq edk2-ovmf
+    pacman -S --noconfirm podman podman-compose libvirt virt-manager qemu qemu-arch-extra qemu-block-gluster glusterfs ebtables dnsmasq edk2-ovmf
 
     systemctl start libvirtd
-    systemctl start docker
 
     virsh net-autostart default
-
-    echo -n -e " ${CYAN}>>${NO_COLOUR} Enter set of users to be added to 'docker' group:"
-    read -s -r USER_LIST
-    for USER in $USER_LIST; do
-        usermod -aG docker $USER
-    done
-    echo
 
     echo -n -e " ${CYAN}>>${NO_COLOUR} Enter set of users to be added to 'libvirt' group:"
     read -s -r USER_LIST
@@ -140,4 +132,4 @@ pacman -S --noconfirm awesome-terminal-fonts powerline-fonts
 # Archivers
 pacman -S --noconfirm p7zip unrar unarchiver lzop lrzip
 # Other Applications
-pacman -S --noconfirm okular firefox dolphin konsole cool-retro-term openssh keepassxc rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip aws-cli htop usbutils
+pacman -S --noconfirm okular firefox dolphin konsole cool-retro-term openssh keepassxc rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip aws-cli htop usbutils openconnect
