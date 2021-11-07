@@ -75,6 +75,17 @@ if confirm " ${CYAN}>>${NO_COLOUR} Setup virtualization/containerization? [y/N]"
         usermod -aG libvirt $USER
     done
     echo
+
+    echo -n -e " ${CYAN}>>${NO_COLOUR} Enter set of users that will use containers:"
+    read -s -r USER_LIST
+    COUNT=1
+    for USER in $USER_LIST; do
+        echo "$USER:${COUNT}00000:65536" >>/etc/subuid
+        echo "$USER:${COUNT}00000:65536" >>/etc/subgid
+        ((COUNT++))
+    done
+    podman system migrate
+    echo
 fi
 
 # Personalization
