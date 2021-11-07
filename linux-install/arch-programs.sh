@@ -39,6 +39,9 @@ if confirm " ${CYAN}>>${NO_COLOUR} Install sudo? [y/N]"; then
         usermod -aG wheel $USER
     done
     echo
+
+    # Enable sudo for wheel group
+    sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /etc/sudoers
 fi
 
 # Development
