@@ -210,7 +210,7 @@ EOF
 
     if [[ PARALLEL_PACMAN -eq 1 ]]; then
         echo -e " ${GREEN}>>${NO_COLOUR} Changing pacman to use parallel downloads"
-        sed -i 's/#ParallelDownloads/ParallelDownloads/g' /etc/pacman.conf
+        sed -i 's/#ParallelDownloads/ParallelDownloads/g' /mnt/etc/pacman.conf
     fi
 
     echo -e " ${GREEN}>>${NO_COLOUR} Setup complete!"
