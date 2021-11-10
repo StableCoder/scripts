@@ -16,5 +16,5 @@ cd /var/cache/pacman/pkg/
 
 for i in $(cat /tmp/packages); do
     echo "FOR: $i"
-    # sudo pacman --noconfirm -U $(ls "$i"* | grep -v -e "\.sig")
+    sudo pacman --noconfirm -U $(ls "$i"* | grep -v -e "\.sig")
 done
