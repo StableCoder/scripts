@@ -5,6 +5,8 @@ set -o errexit
 
 # Colours
 GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
 CYAN='\033[0;36m'
 NO_COLOUR='\033[0m'
 
@@ -28,6 +30,7 @@ confirm() {
 }
 
 # Environment Variables
+EFI_DRIVE=
 OS_DRIVE=
 SWAP_DRIVE=
 
@@ -36,6 +39,11 @@ while [[ $# -gt 0 ]]; do
     key="$1"
 
     case $key in
+    -e | --esp)
+        EFI_DRIVE=$2
+        shift
+        shift
+        ;;
     -o | --os)
         OS_DRIVE=$2
         shift
@@ -54,18 +62,46 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Input checks
-if [ -z "$OS_DRIVE" ]; then
-    print_usage
-    exit 0
+if [ -z "$EFI_DRIVE" ] || [ ! -b "$EFI_DRIVE" ]; then
+    echo -e " ${RED}>> ERROR${NO_COLOUR}: Need to provide partition to install EFI/bootloader"
+    ERROR=1
+fi
+if [ -z "$OS_DRIVE" ] || [ ! -b "$OS_DRIVE" ]; then
+    echo -e " ${RED}>> ERROR${NO_COLOUR}: Need to provide partition to install OS"
+    ERROR=1
+fi
+if [ ! -z "$SWAP_DRIVE" ] && [ ! -b "$SWAP_DRIVE" ]; then
+    echo -e " ${RED}>> ERROR${NO_COLOUR}: Provided swap partition doesn't exist"
+    ERROR=1
+fi
+if [ ! -z $ERROR ]; then
+    exit 1
 fi
 
-# Support nvme drives
-OS_DRIVE_="$OS_DRIVE" # Partition Prefix
-if [[ "$2" =~ ^/dev/nvme ]]; then OS_DRIVE_="${OS_DRIVE}p"; fi
+# Prepare EFI
+echo -e " ${GREEN}>>${NO_COLOUR} Setting up EFI partition ($EFI_DRIVE)"
+mkdir -p /efi_temp
+FS_TYPE=$(blkid -s TYPE $EFI_DRIVE)
+if [ -z "$FS_TYPE" ]; then
+    mkfs.fat -F32 $EFI_DRIVE
+    mount $EFI_DRIVE /efi_temp
+    bootctl --path=/efi_temp install
+else
+    mount $EFI_DRIVE /efi_temp
+fi
+
+# Prepare Swap
+if [ ! -z "$SWAP_DRIVE" ]; then
+    echo -e " ${GREEN}>>${NO_COLOUR} Setting up Swap partition ($SWAP_DRIVE)"
+    FS_TYPE=$(blkid -s TYPE $SWAP_DRIVE)
+    if [ -z "$FS_TYPE" ]; then
+        mkswap $SWAP_DRIVE
+    fi
+    swapon $SWAP_DRIVE
+fi
 
 format_drive() {
     echo " >> Formatting $OS_DRIVE"
-    gdisk -l "$OS_DRIVE"
     echo -n -e " ${CYAN}>>${NO_COLOUR} Are you sure? Type \"YES\" to confirm: "
     _CONFIRM=""
     read _CONFIRM
@@ -100,8 +136,17 @@ format_drive() {
         echo
         if [ "$TEMP_PWORD" == "$TEMP_PWORD_2" ]; then ROOT_PASSWORD="$TEMP_PWORD"; fi
     done
-    echo -n -e " ${CYAN}>>${NO_COLOUR} Set hostname: "
-    read _HOSTNAME
+    HOSTNAME=
+    while [ -z "$HOSTNAME" ]; do
+        echo -n -e " ${CYAN}>>${NO_COLOUR} Set hostname: "
+        read TEMP_HOSTNAME
+        if [ -f /efi_temp/loader/entries/$TEMP_HOSTNAME.conf ] || [ -d /efi_temp/installs/$TEMP_HOSTNAME ]; then
+            echo -e " ${YELLOW}>>${NO_COLOUR} Given hostname already exists on this machine! (boot loader entry)"
+        else
+            HOSTNAME=$TEMP_HOSTNAME
+        fi
+    done
+    umount /efi_temp
     echo -n -e " ${CYAN}>>${NO_COLOUR} Set locale [en_US.UTF-8]: "
     read _LOCALE
     _LOCALE="${_LOCALE:-en_US.UTF-8}"
@@ -113,10 +158,6 @@ format_drive() {
     confirm " ${CYAN}>>${NO_COLOUR} Change pacman to allow parallel downloads? [y/N]" && export PARALLEL_PACMAN=1
 
     # Partition Info
-    printf " ${CYAN}>>${NO_COLOUR} Enter the size of the created LVM partition (+G/-G/0, default: 0): "
-    read LVM_PARTITION_SIZE
-    LVM_PARTITION_SIZE="${LVM_PARTITION_SIZE:-0}"
-
     printf " ${CYAN}>>${NO_COLOUR} Enter the LVM volume name (default: STec): "
     read VOL_GROUP
     VOL_GROUP="${VOL_GROUP:-STec}"
@@ -133,53 +174,37 @@ format_drive() {
     fi
 
     # Wipe and format drive
-    echo -e " ${GREEN}>>${NO_COLOUR} Formatting drive"
+    echo -e " ${GREEN}>>${NO_COLOUR} Formatting drive ($OS_DRIVE)"
     if [[ $SHRED_ITERATIONS -gt 0 ]]; then
         shred -v -n$SHRED_ITERATIONS "$OS_DRIVE"
     fi
-    sgdisk -o "$OS_DRIVE"
-    sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"EFI System Partition" "$OS_DRIVE"
-    sgdisk -n 2:0:$LVM_PARTITION_SIZE -t 2:8e00 -c 2:"$VOL_GROUP LVM" "$OS_DRIVE"
-    sgdisk -p "$OS_DRIVE"
 
     # Encrypt LVM
     if [ ! -z $ENCRYPT_DRIVE ]; then
         echo -e " ${GREEN}>>${NO_COLOUR} Encrypting main partition"
-        cryptsetup luksFormat --type luks2 "$OS_DRIVE_"2 -q <<<"$DISK_PASSWORD"
-        cryptsetup open "$OS_DRIVE_"2 arch_lvm -q <<<"$DISK_PASSWORD"
+        cryptsetup luksFormat --type luks2 $OS_DRIVE -q <<<"$DISK_PASSWORD"
+        cryptsetup open $OS_DRIVE arch_lvm -q <<<"$DISK_PASSWORD"
         pvcreate --dataalignment 1m /dev/mapper/arch_lvm
         vgcreate $VOL_GROUP /dev/mapper/arch_lvm
         lvcreate -l $ROOT_SIZE $VOL_GROUP -n root
         mkfs.ext4 /dev/$VOL_GROUP/root
         mount /dev/$VOL_GROUP/root /mnt
     else
-        pvcreate --dataalignment 1m "$OS_DRIVE_"2
-        vgcreate $VOL_GROUP "$OS_DRIVE_"2
+        pvcreate --dataalignment 1m $OS_DRIVE
+        vgcreate $VOL_GROUP $OS_DRIVE
         lvcreate -l $ROOT_SIZE $VOL_GROUP -n root
         mkfs.ext4 /dev/$VOL_GROUP/root
         mount /dev/$VOL_GROUP/root /mnt
     fi
 
     # Prepare/bind EFI
-    echo -e " ${GREEN}>>${NO_COLOUR} Setting up ESP/EFI/Boot partition"
-    mkfs.fat -F32 "$OS_DRIVE_"1
-    mkdir /mnt/efi
-    mount "$OS_DRIVE_"1 /mnt/efi
-
-    # Install bootloader
-    bootctl --path=/mnt/efi install
-
-    # Bind OS boot path to the appropriate EFI directory
-    BOOT_PATH=/efi/installs/$_HOSTNAME
+    echo -e " ${GREEN}>>${NO_COLOUR} Setting up EFI/Boot mount points"
+    mkdir -p /mnt/efi
+    mount $EFI_DRIVE /mnt/efi
+    BOOT_PATH=/efi/installs/$HOSTNAME
     mkdir -p /mnt$BOOT_PATH
-    mkdir /mnt/boot
+    mkdir -p /mnt/boot
     mount -o bind /mnt$BOOT_PATH /mnt/boot
-
-    # Mount Swap partition
-    echo -e " ${GREEN}>>${NO_COLOUR} Setting up Swap partition"
-    if [ ! -z "$SWAP_DRIVE" ]; then
-        swapon $SWAP_DRIVE
-    fi
 
     # Generate FS Table (fstab)
     echo -e " ${GREEN}>>${NO_COLOUR} Generating filesystem table (fstab)"
@@ -209,10 +234,10 @@ format_drive() {
         echo -e "${GREEN}>>${NO_COLOUR} Setting to hardware clock"
         hwclock --systohc
         echo -e "${GREEN}>>${NO_COLOUR} Setting up local hostname"
-        echo "$_HOSTNAME" >> /etc/hostname
-        echo "127.0.0.1 $_HOSTNAME" >> /etc/hosts
-        echo "::1 $_HOSTNAME" >> /etc/hosts
-        echo "127.0.1.1 $_HOSTNAME.localdomain $_HOSTNAME" >> /etc/hosts
+        echo "$HOSTNAME" >> /etc/hostname
+        echo "127.0.0.1 $HOSTNAME" >> /etc/hosts
+        echo "::1 $HOSTNAME" >> /etc/hosts
+        echo "127.0.1.1 $HOSTNAME.localdomain $HOSTNAME" >> /etc/hosts
         echo -e "${GREEN}>>${NO_COLOUR} Setting up locale"
         sed -i "s|#\($_LOCALE.*\)\$|\1|" /etc/locale.gen
         locale-gen
@@ -232,23 +257,23 @@ EOF
 
     # Loader Conf
     echo -e " ${GREEN}>>${NO_COLOUR} Setting up systemd-boot loader entry (loader.conf)"
-    echo "default $_HOSTNAME" >/mnt/efi/loader/loader.conf
+    echo "default $HOSTNAME" >/mnt/efi/loader/loader.conf
     echo "timeout 5" >>/mnt/efi/loader/loader.conf
     echo "editor 0" >>/mnt/efi/loader/loader.conf
     # Arch Loader Entry Conf
-    echo -e " ${GREEN}>>${NO_COLOUR} Setting up systemd-boot ($_HOSTNAME.conf)"
-    echo "title Arch Linux" >/mnt/efi/loader/entries/$_HOSTNAME.conf
-    echo "linux $BOOT_PATH/vmlinuz-linux" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
-    cat /proc/cpuinfo | grep -q GenuineIntel && echo "initrd $BOOT_PATH/intel-ucode.img" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
-    cat /proc/cpuinfo | grep -q AuthenticAMD && echo "initrd $BOOT_PATH/amd-ucode.img" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
-    echo "initrd $BOOT_PATH/initramfs-linux.img" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
-    UUID=$(blkid "$OS_DRIVE_"2 | cut -d'"' -f2)
+    echo -e " ${GREEN}>>${NO_COLOUR} Setting up systemd-boot ($HOSTNAME.conf)"
+    echo "title Arch Linux - $HOSTNAME" >/mnt/efi/loader/entries/$HOSTNAME.conf
+    echo "linux $BOOT_PATH/vmlinuz-linux" >>/mnt/efi/loader/entries/$HOSTNAME.conf
+    cat /proc/cpuinfo | grep -q GenuineIntel && echo "initrd $BOOT_PATH/intel-ucode.img" >>/mnt/efi/loader/entries/$HOSTNAME.conf
+    cat /proc/cpuinfo | grep -q AuthenticAMD && echo "initrd $BOOT_PATH/amd-ucode.img" >>/mnt/efi/loader/entries/$HOSTNAME.conf
+    echo "initrd $BOOT_PATH/initramfs-linux.img" >>/mnt/efi/loader/entries/$HOSTNAME.conf
+    UUID=$(blkid $OS_DRIVE | cut -d'"' -f2)
     if [ ! -z $ENCRYPT_DRIVE ]; then
-        echo "options cryptdevice=UUID=$UUID:volume root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
+        echo "options cryptdevice=UUID=$UUID:volume root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/efi/loader/entries/$HOSTNAME.conf
     else
-        echo "options root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
+        echo "options root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/efi/loader/entries/$HOSTNAME.conf
     fi
-    sed -i "s|/efi||" /mnt/efi/loader/entries/$_HOSTNAME.conf
+    sed -i "s|/efi||" /mnt/efi/loader/entries/$HOSTNAME.conf
 
     if [ "$INSTALLNM" == 1 ]; then
         echo -e " ${GREEN}>>${NO_COLOUR} Installing NetworkManager"
