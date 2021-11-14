@@ -28,7 +28,7 @@ confirm() {
 }
 
 # Environment Variables
-DRIVE=
+OS_DRIVE=
 
 # Command-Line Parsing
 while [[ $# -gt 0 ]]; do
@@ -36,7 +36,7 @@ while [[ $# -gt 0 ]]; do
 
     case $key in
     -o | --os)
-        DRIVE=$2
+        OS_DRIVE=$2
         shift
         shift
         ;;
@@ -48,18 +48,18 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Input checks
-if [ -z "$DRIVE" ]; then
+if [ -z "$OS_DRIVE" ]; then
     print_usage
     exit 0
 fi
 
 # Support nvme drives
-DRIVE_="$DRIVE" # Partition Prefix
-if [[ "$2" =~ ^/dev/nvme ]]; then DRIVE_="${DRIVE}p"; fi
+OS_DRIVE_="$OS_DRIVE" # Partition Prefix
+if [[ "$2" =~ ^/dev/nvme ]]; then OS_DRIVE_="${OS_DRIVE}p"; fi
 
 format_drive() {
-    echo " >> Formatting $DRIVE"
-    gdisk -l "$DRIVE"
+    echo " >> Formatting $OS_DRIVE"
+    gdisk -l "$OS_DRIVE"
     echo -n -e " ${CYAN}>>${NO_COLOUR} Are you sure? Type \"YES\" to confirm: "
     _CONFIRM=""
     read _CONFIRM
@@ -129,26 +129,26 @@ format_drive() {
     # Wipe and format drive
     echo -e " ${GREEN}>>${NO_COLOUR} Formatting drive"
     if [[ $SHRED_ITERATIONS -gt 0 ]]; then
-        shred -v -n$SHRED_ITERATIONS "$DRIVE"
+        shred -v -n$SHRED_ITERATIONS "$OS_DRIVE"
     fi
-    sgdisk -o "$DRIVE"
-    sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"EFI System Partition" "$DRIVE"
-    sgdisk -n 2:0:$LVM_PARTITION_SIZE -t 2:8e00 -c 2:"$VOL_GROUP LVM" "$DRIVE"
-    sgdisk -p "$DRIVE"
+    sgdisk -o "$OS_DRIVE"
+    sgdisk -n 1:0:+512M -t 1:ef00 -c 1:"EFI System Partition" "$OS_DRIVE"
+    sgdisk -n 2:0:$LVM_PARTITION_SIZE -t 2:8e00 -c 2:"$VOL_GROUP LVM" "$OS_DRIVE"
+    sgdisk -p "$OS_DRIVE"
 
     # Encrypt LVM
     if [ ! -z $ENCRYPT_DRIVE ]; then
         echo -e " ${GREEN}>>${NO_COLOUR} Encrypting main partition"
-        cryptsetup luksFormat --type luks2 "$DRIVE_"2 -q <<<"$DISK_PASSWORD"
-        cryptsetup open "$DRIVE_"2 arch_lvm -q <<<"$DISK_PASSWORD"
+        cryptsetup luksFormat --type luks2 "$OS_DRIVE_"2 -q <<<"$DISK_PASSWORD"
+        cryptsetup open "$OS_DRIVE_"2 arch_lvm -q <<<"$DISK_PASSWORD"
         pvcreate --dataalignment 1m /dev/mapper/arch_lvm
         vgcreate $VOL_GROUP /dev/mapper/arch_lvm
         lvcreate -l $ROOT_SIZE $VOL_GROUP -n root
         mkfs.ext4 /dev/$VOL_GROUP/root
         mount /dev/$VOL_GROUP/root /mnt
     else
-        pvcreate --dataalignment 1m "$DRIVE_"2
-        vgcreate $VOL_GROUP "$DRIVE_"2
+        pvcreate --dataalignment 1m "$OS_DRIVE_"2
+        vgcreate $VOL_GROUP "$OS_DRIVE_"2
         lvcreate -l $ROOT_SIZE $VOL_GROUP -n root
         mkfs.ext4 /dev/$VOL_GROUP/root
         mount /dev/$VOL_GROUP/root /mnt
@@ -156,9 +156,9 @@ format_drive() {
 
     # Prepare/bind EFI
     echo -e " ${GREEN}>>${NO_COLOUR} Installing OS"
-    mkfs.fat -F32 "$DRIVE_"1
+    mkfs.fat -F32 "$OS_DRIVE_"1
     mkdir /mnt/efi
-    mount "$DRIVE_"1 /mnt/efi
+    mount "$OS_DRIVE_"1 /mnt/efi
 
     # Install bootloader
     bootctl --path=/mnt/efi install
@@ -230,7 +230,7 @@ EOF
     cat /proc/cpuinfo | grep -q GenuineIntel && echo "initrd $BOOT_PATH/intel-ucode.img" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
     cat /proc/cpuinfo | grep -q AuthenticAMD && echo "initrd $BOOT_PATH/amd-ucode.img" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
     echo "initrd $BOOT_PATH/initramfs-linux.img" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
-    UUID=$(blkid "$DRIVE_"2 | cut -d'"' -f2)
+    UUID=$(blkid "$OS_DRIVE_"2 | cut -d'"' -f2)
     if [ ! -z $ENCRYPT_DRIVE ]; then
         echo "options cryptdevice=UUID=$UUID:volume root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
     else
