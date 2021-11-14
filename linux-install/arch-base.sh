@@ -29,6 +29,7 @@ confirm() {
 
 # Environment Variables
 OS_DRIVE=
+SWAP_DRIVE=
 
 # Command-Line Parsing
 while [[ $# -gt 0 ]]; do
@@ -37,6 +38,11 @@ while [[ $# -gt 0 ]]; do
     case $key in
     -o | --os)
         OS_DRIVE=$2
+        shift
+        shift
+        ;;
+    -s | --swap)
+        SWAP_DRIVE=$2
         shift
         shift
         ;;
@@ -155,7 +161,7 @@ format_drive() {
     fi
 
     # Prepare/bind EFI
-    echo -e " ${GREEN}>>${NO_COLOUR} Installing OS"
+    echo -e " ${GREEN}>>${NO_COLOUR} Setting up ESP/EFI/Boot partition"
     mkfs.fat -F32 "$OS_DRIVE_"1
     mkdir /mnt/efi
     mount "$OS_DRIVE_"1 /mnt/efi
@@ -168,6 +174,12 @@ format_drive() {
     mkdir -p /mnt$BOOT_PATH
     mkdir /mnt/boot
     mount -o bind /mnt$BOOT_PATH /mnt/boot
+
+    # Mount Swap partition
+    echo -e " ${GREEN}>>${NO_COLOUR} Setting up Swap partition"
+    if [ ! -z "$SWAP_DRIVE" ]; then
+        swapon $SWAP_DRIVE
+    fi
 
     # Generate FS Table (fstab)
     echo -e " ${GREEN}>>${NO_COLOUR} Generating filesystem table (fstab)"
