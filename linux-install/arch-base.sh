@@ -123,21 +123,36 @@ format_drive() {
         mount /dev/$VOL_GROUP/root /mnt
     fi
 
-    # Prepare EFI
+    # Prepare/bind EFI
     echo -e " ${GREEN}>>${NO_COLOUR} Installing OS"
     mkfs.fat -F32 "$DRIVE_"1
-    mkdir /mnt/boot
-    mount "$DRIVE_"1 /mnt/boot
+    mkdir /mnt/efi
+    mount "$DRIVE_"1 /mnt/efi
 
-    # Prepare bootloader
-    echo -e " ${GREEN}>>${NO_COLOUR} Preparing bootloader"
-    sed -i '6i Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch' /etc/pacman.d/mirrorlist
-    timedatectl set-ntp true
-    pacstrap /mnt base linux linux-firmware lvm2 vim
+    # Install bootloader
+    bootctl --path=/mnt/efi install
+
+    # Bind OS boot path to the appropriate EFI directory
+    BOOT_PATH=/efi/installs/$_HOSTNAME
+    mkdir -p /mnt$BOOT_PATH
+    mkdir /mnt/boot
+    mount -o bind /mnt$BOOT_PATH /mnt/boot
+
+    # Generate FS Table (fstab)
+    echo -e " ${GREEN}>>${NO_COLOUR} Generating filesystem table (fstab)"
+    mkdir -p /mnt/etc
     genfstab -U /mnt >>/mnt/etc/fstab
+    sed -i "s|/mnt||" /mnt/etc/fstab
     echo -e " ${GREEN}>>${NO_COLOUR} Generated filesystem table (fstab):"
     cat /mnt/etc/fstab
-    # Edit /etc/mkinitcpio.conf
+
+    # Install base packages
+    echo -e " ${GREEN}>>${NO_COLOUR} Install Arch base packages"
+    timedatectl set-ntp true
+    sed -i '6i Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch' /etc/pacman.d/mirrorlist
+    pacstrap /mnt base linux linux-firmware lvm2 vim
+
+    # Edit /etc/mkinitcpio.conf (different requirements if drive was encrypted)
     if [ ! -z $ENCRYPT_DRIVE ]; then
         INIT_HOOKS="HOOKS=(base udev autodetect modconf block keyboard encrypt lvm2 filesystems fsck)"
     else
@@ -165,32 +180,32 @@ format_drive() {
         echo -e "${GREEN}>>${NO_COLOUR} Installing appropriate micro-code"
         cat /proc/cpuinfo | grep -q GenuineIntel && pacman -S --noconfirm intel-ucode 
         cat /proc/cpuinfo | grep -q AuthenticAMD && pacman -S --noconfirm amd-ucode
-        # Install bootloaders
-        echo -e "${GREEN}>>${NO_COLOUR} Installing bootloader (mkinitcpio/bootctl)"
+        # Rebuild boot images
+        echo -e "${GREEN}>>${NO_COLOUR} Rebuilding boot images (mkinitcpio)"
         mkinitcpio -p linux
-        bootctl install
         echo -e "${GREEN}>>${NO_COLOUR} Setting the root user password"
-        echo root:$ROOT_PASSWORD | chpasswd
+        echo 'root:$ROOT_PASSWORD' | chpasswd
 EOF
 
     # Loader Conf
-    echo -e " ${GREEN}>>${NO_COLOUR} Setting up systemd-boot (loader.conf)"
-    echo "default arch" >/mnt/boot/loader/loader.conf
-    echo "timeout 5" >>/mnt/boot/loader/loader.conf
-    echo "editor 0" >>/mnt/boot/loader/loader.conf
+    echo -e " ${GREEN}>>${NO_COLOUR} Setting up systemd-boot loader entry (loader.conf)"
+    echo "default $_HOSTNAME" >/mnt/efi/loader/loader.conf
+    echo "timeout 5" >>/mnt/efi/loader/loader.conf
+    echo "editor 0" >>/mnt/efi/loader/loader.conf
     # Arch Loader Entry Conf
-    echo -e " ${GREEN}>>${NO_COLOUR} Setting up systemd-boot (arch.conf)"
-    echo "title Arch Linux" >/mnt/boot/loader/entries/arch.conf
-    echo "linux /vmlinuz-linux" >>/mnt/boot/loader/entries/arch.conf
-    cat /proc/cpuinfo | grep -q GenuineIntel && echo "initrd /intel-ucode.img" >>/mnt/boot/loader/entries/arch.conf
-    cat /proc/cpuinfo | grep -q AuthenticAMD && echo "initrd /amd-ucode.img" >>/mnt/boot/loader/entries/arch.conf
-    echo "initrd /initramfs-linux.img" >>/mnt/boot/loader/entries/arch.conf
+    echo -e " ${GREEN}>>${NO_COLOUR} Setting up systemd-boot ($_HOSTNAME.conf)"
+    echo "title Arch Linux" >/mnt/efi/loader/entries/$_HOSTNAME.conf
+    echo "linux $BOOT_PATH/vmlinuz-linux" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
+    cat /proc/cpuinfo | grep -q GenuineIntel && echo "initrd $BOOT_PATH/intel-ucode.img" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
+    cat /proc/cpuinfo | grep -q AuthenticAMD && echo "initrd $BOOT_PATH/amd-ucode.img" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
+    echo "initrd $BOOT_PATH/initramfs-linux.img" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
     UUID=$(blkid "$DRIVE_"2 | cut -d'"' -f2)
     if [ ! -z $ENCRYPT_DRIVE ]; then
-        echo "options cryptdevice=UUID=$UUID:volume root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/boot/loader/entries/arch.conf
+        echo "options cryptdevice=UUID=$UUID:volume root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
     else
-        echo "options root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/boot/loader/entries/arch.conf
+        echo "options root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
     fi
+    sed -i "s|/efi/||" /mnt/etc/fstab
 
     if [ "$INSTALLNM" == 1 ]; then
         echo -e " ${GREEN}>>${NO_COLOUR} Installing NetworkManager"
