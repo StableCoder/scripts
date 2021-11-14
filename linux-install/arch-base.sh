@@ -236,7 +236,7 @@ EOF
     else
         echo "options root=/dev/mapper/$VOL_GROUP-root quiet rw" >>/mnt/efi/loader/entries/$_HOSTNAME.conf
     fi
-    sed -i "s|/efi/||" /mnt/etc/fstab
+    sed -i "s|/efi||" /mnt/efi/loader/entries/$_HOSTNAME.conf
 
     if [ "$INSTALLNM" == 1 ]; then
         echo -e " ${GREEN}>>${NO_COLOUR} Installing NetworkManager"
