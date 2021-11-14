@@ -1,13 +1,14 @@
 #!/bin/env bash
-GREEN='\033[0;32m'
-CYAN='\033[0;36m'
-NO_COLOUR='\033[0m'
-
-DRIVE="$2"
 
 # Exit on any error
 set -o errexit
 
+# Colours
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+NO_COLOUR='\033[0m'
+
+# Functions
 print_usage() {
     echo "Usage: "
     echo "   arch-base.sh format <device>"
@@ -25,6 +26,36 @@ confirm() {
         ;;
     esac
 }
+
+# Environment Variables
+DRIVE=
+
+# Command-Line Parsing
+while [[ $# -gt 0 ]]; do
+    key="$1"
+
+    case $key in
+    -o | --os)
+        DRIVE=$2
+        shift
+        shift
+        ;;
+    *)
+        print_usage
+        exit 1
+        ;;
+    esac
+done
+
+# Input checks
+if [ -z "$DRIVE" ]; then
+    print_usage
+    exit 0
+fi
+
+# Support nvme drives
+DRIVE_="$DRIVE" # Partition Prefix
+if [[ "$2" =~ ^/dev/nvme ]]; then DRIVE_="${DRIVE}p"; fi
 
 format_drive() {
     echo " >> Formatting $DRIVE"
@@ -231,14 +262,4 @@ EOF
     echo -e " ${GREEN}>>${NO_COLOUR} Setup complete!"
 }
 
-# Support nvme drives
-DRIVE_="$DRIVE" # Partition Prefix
-if [[ "$2" =~ ^/dev/nvme ]]; then DRIVE_="${DRIVE}p"; fi
-
-##
-if [ "$1" == "format" ]; then
-    format_drive
-else
-    print_usage
-    exit 1
-fi
+format_drive
