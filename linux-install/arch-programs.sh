@@ -56,7 +56,7 @@ fi
 
 # Gamedev
 if confirm " ${CYAN}>>${NO_COLOUR} Install FoE game development libraries? [y/N]"; then
-    pacman -S --noconfirm assimp portaudio bullet vulkan-devel fmt glm glfw freeimage catch2 libyaml yaml-cpp
+    pacman -S --noconfirm assimp portaudio bullet vulkan-devel fmt glm glfw freeimage catch2 libyaml yaml-cpp openxr
 fi
 
 # Virtualization/Containerization
