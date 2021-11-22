@@ -146,4 +146,4 @@ pacman -S --noconfirm awesome-terminal-fonts powerline-fonts
 # Archivers
 pacman -S --noconfirm p7zip unrar unarchiver lzop lrzip
 # Other Applications
-pacman -S --noconfirm okular firefox dolphin konsole cool-retro-term openssh keepassxc rdesktop python-pyopenssl youtube-dl ufw traceroute remmina rsync zip aws-cli htop usbutils openconnect
+pacman -S --noconfirm okular firefox dolphin konsole cool-retro-term openssh keepassxc rdesktop python-pyopenssl yt-dlp ufw traceroute remmina rsync zip aws-cli htop usbutils openconnect
