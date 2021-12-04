@@ -24,7 +24,7 @@ try {
     cd yamlcpp-build
 
     # Configure/compile
-    cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\yaml-cpp" -DBUILD_SHARED_LIBS=OFF -DYAML_CPP_BUILD_CONTRIB=OFF -DYAML_CPP_BUILD_TESTS=OFF -DYAML_CPP_BUILD_TOOLS=OFF
+    cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\yaml-cpp" -DYAML_BUILD_SHARED_LIBS=ON -DYAML_CPP_BUILD_CONTRIB=OFF -DYAML_CPP_BUILD_TESTS=OFF -DYAML_CPP_BUILD_TOOLS=OFF
     ninja
     if($LastExitCode -ne 0) { throw }
 
@@ -37,7 +37,7 @@ try {
 
     # Delete our working directory
     cd $invocationDir
-    Remove-Item -Path .\yaml-cpp-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path .\yamlcpp-workdir\ -Recurse -ErrorAction SilentlyContinue
 
     # Setup the environment variables (Only if not found in the var already)
     if($null -eq ( ";C:\\yaml-cpp\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
@@ -56,6 +56,6 @@ try {
 } catch {
     # Cleanup the failed build folder
     cd $invocationDir
-    Remove-Item -Path .\yaml-cpp-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path .\yamlcpp-workdir\ -Recurse -ErrorAction SilentlyContinue
     exit 1
 }
