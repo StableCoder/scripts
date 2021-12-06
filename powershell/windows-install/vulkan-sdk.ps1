@@ -1,7 +1,7 @@
 try {
 [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
 wget https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-sdk.exe?Human=true -OutFile VulkanSDK.exe -UseBasicParsing
-.\VulkanSDK.exe /S /D=C:\VulkanSDK | Out-Null
+.\VulkanSDK.exe --root C:\VulkanSDK --accept-licenses --default-answer --confirm-command install | Out-Null
 Remove-Item VulkanSDK.exe
 Remove-Item -Path C:\VulkanSDK\Bin32 -Recurse -ErrorAction SilentlyContinue
 
