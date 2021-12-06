@@ -36,8 +36,8 @@ try{
     mkdir C:\assimp\bin
     mkdir C:\assimp\include
     mkdir C:\assimp\lib
-    Copy-Item code\*.dll -Destination C:\assimp\bin
-    Copy-Item code\*.lib -Destination C:\assimp\lib
+    Copy-Item bin\*.dll -Destination C:\assimp\bin
+    Copy-Item lib\*.lib -Destination C:\assimp\lib
     Copy-Item include\* -Destination C:\assimp\include -Recurse
     cd ..
     Copy-Item include\* -Destination C:\assimp\include -Recurse
