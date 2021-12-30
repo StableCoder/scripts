@@ -6,12 +6,21 @@ services:
     restart: always
     hostname: git.stabletec.com
     ports:
-      - "4080:80"
       - "22:22"
     volumes:
       - GitlabConfig:/etc/gitlab
       - GitlabLogs:/var/log/gitlab
       - GitlabData:/var/opt/gitlab
+  nginx:
+    container_name: nginx
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/nginx:/etc/nginx
+      - /etc/letsencrypt:/etc/letsencrypt
 
 volumes:
   GitlabConfig:
