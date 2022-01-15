@@ -104,7 +104,7 @@ fi
 # Desktop Environments
 if confirm " ${CYAN}>>${NO_COLOUR} Install KDE Plasma DE? [y/N]"; then
     # KDE
-    pacman -S --noconfirm plasma kdeplasma-addons papirus-icon-theme ffmpegthumbs ark kimageformats qt5-imageformats qt6-imageformats
+    pacman -S --noconfirm plasma plasma-wayland-session kdeplasma-addons papirus-icon-theme ffmpegthumbs ark kimageformats qt5-imageformats qt6-imageformats spectacle
     pacman -Rs --noconfirm discover
 
     if confirm " ${CYAN}>>${NO_COLOUR} Enable SDDM? [y/N]"; then
@@ -123,7 +123,7 @@ fi
 
 # Media applications / audio codecs / plugins
 if confirm " ${CYAN}>>${NO_COLOUR} Install media applications/audio codecs? [y/N]"; then
-    pacman -S --noconfirm clementine elisa eog gwenview vlc gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gstreamer-vaapi
+    pacman -S --noconfirm elisa eog gwenview vlc gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav gstreamer-vaapi
 fi
 
 # Productivity
