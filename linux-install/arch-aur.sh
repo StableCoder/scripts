@@ -41,7 +41,7 @@ fi
 # Container Multi-Arch
 if confirm " ${CYAN}>>${NO_COLOUR} Install multi-arch support for containers? [y/N]"; then
     pikaur -S --noconfirm --nodiff --noedit qemu-user-static
-    pikaur -S --noconfirm --nodiff --noedit binfmt-qemu-static
+    pikaur -S --noconfirm --nodiff --noedit binfmt-qemu-static-all-arch
 fi
 
 # UI
