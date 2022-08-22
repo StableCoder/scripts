@@ -1,3 +1,6 @@
+# To setup cert from Let's Encrypt, call
+# sudo podman run -it --rm --name certbot -v "/home/ec2-user/etc-letsencrypt:/etc/letsencrypt" -v "/home/ec2-user/var-lib-letsencrypt:/var/lib/letsencrypt" -p 80:80 -p 443:443 docker.io/certbot/certbot:latest certonly
+
 version: '3'
 services:
   gitlab:
@@ -19,8 +22,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - /etc/nginx:/etc/nginx
-      - /etc/letsencrypt:/etc/letsencrypt
+      - ./nginx.conf.d:/etc/nginx/conf.d
+      - /home/ec2-user/etc-letsencrypt:/etc/letsencrypt
+      - /home/ec2-user/var-lib-letsencrypt:/var/lib/letsencrypt
 
 volumes:
   GitlabConfig:
