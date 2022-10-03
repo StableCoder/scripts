@@ -38,12 +38,6 @@ if confirm " ${CYAN}>>${NO_COLOUR} Install development items? [y/N]"; then
     pikaur -S --noconfirm --nodiff --noedit bloaty cmake-format cppreference renderdoc
 fi
 
-# Container Multi-Arch
-if confirm " ${CYAN}>>${NO_COLOUR} Install multi-arch support for containers? [y/N]"; then
-    pikaur -S --noconfirm --nodiff --noedit qemu-user-static
-    pikaur -S --noconfirm --nodiff --noedit binfmt-qemu-static-all-arch
-fi
-
 # UI
 if confirm " ${CYAN}>>${NO_COLOUR} Install monofonto? [y/N]"; then
     pikaur -S --noconfirm --nodiff --noedit monofonto
