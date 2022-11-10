@@ -59,11 +59,11 @@ if confirm " ${CYAN}>>${NO_COLOUR} Install FoE game development libraries? [y/N]
     pacman -S --noconfirm assimp portaudio bullet vulkan-devel fmt glm glfw freeimage catch2 libyaml yaml-cpp openxr
 fi
 
-# Virtualization/Containerization
-if confirm " ${CYAN}>>${NO_COLOUR} Setup virtualization/containerization? [y/N]"; then
+# Virtualization/Containers
+if confirm " ${CYAN}>>${NO_COLOUR} Setup virtualization? [y/N]"; then
     echo -e " ${GREEN}>>${NO_COLOUR} iptables-nft will need to replace iptables, and will request permission to do so."
     pacman -S iptables-nft
-    pacman -S --noconfirm buildah podman podman-compose libvirt virt-manager qemu qemu-arch-extra qemu-user-static qemu-user-static-binfmt  qemu-block-gluster glusterfs ebtables dnsmasq edk2-ovmf
+    pacman -S --noconfirm libvirt virt-manager qemu qemu-arch-extra qemu-block-gluster glusterfs ebtables dnsmasq edk2-ovmf
 
     systemctl start libvirtd
 
@@ -75,6 +75,10 @@ if confirm " ${CYAN}>>${NO_COLOUR} Setup virtualization/containerization? [y/N]"
         usermod -aG libvirt $USER
     done
     echo
+fi
+
+if confirm " ${CYAN}>>${NO_COLOUR} Setup containers? [y/N]"; then
+    pacman -S --noconfirm buildah podman podman-compose qemu-user-static qemu-user-static-binfmt qemu-block-gluster glusterfs
 
     echo -n -e " ${CYAN}>>${NO_COLOUR} Enter set of users that will use containers:"
     read -s -r USER_LIST
@@ -142,8 +146,14 @@ if confirm " ${CYAN}>>${NO_COLOUR} Install video editing/processing? [y/N]"; the
 fi
 
 # Fonts
-pacman -S --noconfirm awesome-terminal-fonts powerline-fonts
-# Archivers
-pacman -S --noconfirm p7zip unrar unarchiver lzop lrzip
+if confirm " ${CYAN}>>${NO_COLOUR} Install fonts? [y/N]"; then
+    pacman -S --noconfirm awesome-terminal-fonts powerline-fonts
+fi
 # Other Applications
-pacman -S --noconfirm okular firefox dolphin konsole cool-retro-term openssh keepassxc rdesktop python-pyopenssl yt-dlp ufw traceroute remmina rsync zip aws-cli htop usbutils openconnect
+if confirm " ${CYAN}>>${NO_COLOUR} Install other GUI applications? [y/N]"; then
+    pacman -S --noconfirm okular firefox dolphin konsole cool-retro-term keepassxc rdesktop python-pyopenssl yt-dlp ufw remminaaws-cli
+fi
+pacman -S --noconfirm openssh traceroute rsync htop usbutils
+
+# Archivers
+pacman -S --noconfirm p7zip unrar unarchiver lzop lrzip zip
