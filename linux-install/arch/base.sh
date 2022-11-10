@@ -13,7 +13,12 @@ NO_COLOUR='\033[0m'
 # Functions
 print_usage() {
     echo "Usage: "
-    echo "   arch-base.sh format <device>"
+    echo "   arch-base.sh [OPTIONS...]"
+    echo ""
+    echo "   Options:"
+    echo "     -e, --esp  <DEV> Partition to use for EFI boot data"
+    echo "     -o, --os   <DEV> Partition to install the OS on"
+    echo "     -s, --swap <DEV> Partition to use as SWAP"
 }
 
 confirm() {
