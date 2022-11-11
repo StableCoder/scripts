@@ -84,8 +84,7 @@ if confirm " ${CYAN}>>${NO_COLOUR} Setup containers? [y/N]"; then
     read -s -r USER_LIST
     COUNT=1
     for USER in $USER_LIST; do
-        echo "$USER:${COUNT}00000:65536" >>/etc/subuid
-        echo "$USER:${COUNT}00000:65536" >>/etc/subgid
+        usermod --add-subuids ${COUNT}00000-${COUNT}65535 --add-subgids ${COUNT}00000-${COUNT}65535 $USER
         ((COUNT++))
     done
     podman system migrate
