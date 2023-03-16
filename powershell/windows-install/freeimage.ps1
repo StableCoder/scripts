@@ -12,9 +12,11 @@ try {
     7z x FreeImage.zip
 
     # Remove the older install (if it exists)
+    Write-Host "Removing old install (if it exists)"
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\freeimage
 
-    # Install bin/lib
+    # Install
+    Write-Host "Installing"
     mkdir C:\freeimage\bin
     mkdir C:\freeimage\include
     mkdir C:\freeimage\lib

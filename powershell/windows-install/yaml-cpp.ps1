@@ -18,21 +18,19 @@ try {
     7z x -aoa yaml-cpp.zip
     cd yaml-cpp-master
 
-    # Create/enter a separate build directory
-    Write-Host "Creating build directory"
-    mkdir yamlcpp-build
-    cd yamlcpp-build
-
-    # Configure/compile
-    cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\yaml-cpp" -DYAML_BUILD_SHARED_LIBS=ON -DYAML_CPP_BUILD_CONTRIB=OFF -DYAML_CPP_BUILD_TESTS=OFF -DYAML_CPP_BUILD_TOOLS=OFF
-    ninja
+    # Configure and Compile
+    Write-Host "Configuring and compiling"
+    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="C:\yaml-cpp" -D YAML_BUILD_SHARED_LIBS=ON -D YAML_CPP_BUILD_CONTRIB=OFF -D YAML_CPP_BUILD_TESTS=OFF -D YAML_CPP_BUILD_TOOLS=OFF
+    cmake --build build
     if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
+    Write-Host "Removing old install (if it exists)"
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\yaml-cpp
     
-    ## Install the newly compiled library
-    ninja install
+    # Install
+    Write-Host "Installing"
+    cmake --install build
     if($LastExitCode -ne 0) { throw }
 
     # Delete our working directory
@@ -43,15 +41,6 @@ try {
     if($null -eq ( ";C:\\yaml-cpp\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
         # PATH
         [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\yaml-cpp\bin", [System.EnvironmentVariableTarget]::Machine )
-    }
-    if($null -eq ( ";C:\\yaml-cpp\\include" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") -match $_ })) {
-        # CUSTOM_INCLUDE
-        [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:\yaml-cpp\include", [System.EnvironmentVariableTarget]::Machine )
-    }
-    if($null -eq ( ";C:\\yaml-cpp\\lib" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") -match $_ })) {
-        # CUSTOM_LIB
-
-        [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";C:\yaml-cpp\lib", [System.EnvironmentVariableTarget]::Machine )
     }
 } catch {
     # Cleanup the failed build folder

@@ -19,28 +19,25 @@ try{
     7z x -aoa assimp.tar
     cd assimp-${env:ASSIMP_VER} 
 
-    # Create/enter a separate build directory
-    Write-Host "Creating build directory"
-    mkdir cmake-build
-    cd cmake-build
-
     # Configure/compile
-    cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DASSIMP_BUILD_ASSIMP_TOOLS=OFF -DASSIMP_BUILD_TESTS=OFF -DLIBRARY_SUFFIX="" -DBUILD_TESTING=OFF
-    ninja
+    Write-Host "Configuring and compiling"
+    cmake -B build -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DASSIMP_BUILD_ASSIMP_TOOLS=OFF -DASSIMP_BUILD_TESTS=OFF -DLIBRARY_SUFFIX=""
+    cmake --build build
     if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
+    Write-Host "Removing old install (if it exists)"
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\assimp
 
     # Install
+    Write-Host "Installing"
     mkdir C:\assimp\bin
     mkdir C:\assimp\include
     mkdir C:\assimp\lib
-    Copy-Item bin\*.dll -Destination C:\assimp\bin
-    Copy-Item lib\*.lib -Destination C:\assimp\lib
+    Copy-Item build\bin\*.dll -Destination C:\assimp\bin
+    Copy-Item build\lib\*.lib -Destination C:\assimp\lib
     Copy-Item include\* -Destination C:\assimp\include -Recurse
-    cd ..
-    Copy-Item include\* -Destination C:\assimp\include -Recurse
+    Copy-Item build\include\* -Destination C:\assimp\include -Recurse
 
     # Delete our working directory
     cd $invocationDir

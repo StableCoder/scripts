@@ -19,21 +19,19 @@ try {
     Remove-Item -Path glfw-$env:GLFW_VER.zip -Recurse -ErrorAction SilentlyContinue
     cd glfw-$env:GLFW_VER
 
-    # Create/enter a separate build directory
-    Write-Host "Creating build directory"
-    mkdir cmake-build
-    cd cmake-build
-
-    # Configure Compile
-    cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_PREFIX="C:\glfw"
-    ninja
+    # Configure and Compile
+    Write-Host "Configuring and compiling"
+    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D BUILD_SHARED_LIBS=ON -D CMAKE_INSTALL_PREFIX="C:\glfw" -D GLFW_BUILD_EXAMPLES=OFF -D GLFW_BUILD_TESTS=OFF -D GLFW_BUILD_DOCS=OFF
+    cmake --build build
     if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
+    Write-Host "Removing old install (if it exists)"
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\glfw
 
-    # Install the compiled lib
-    ninja install
+    # Install
+    Write-Host "Installing"
+    cmake --install build
     if($LastExitCode -ne 0) { throw }
     
     # Delete our working directory
@@ -44,15 +42,6 @@ try {
     if($null -eq ( ";C:\\glfw\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
         # PATH
         [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\glfw\bin", [System.EnvironmentVariableTarget]::Machine )
-    }
-    if($null -eq ( ";C:\\glfw\\include" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") -match $_ })) {
-        # CUSTOM_INCLUDE
-        [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:\glfw\include", [System.EnvironmentVariableTarget]::Machine )
-    }
-    if($null -eq ( ";C:\\glfw\\lib" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") -match $_ })) {
-        # CUSTOM_LIB
-
-        [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";C:\glfw\lib", [System.EnvironmentVariableTarget]::Machine )
     }
 } catch {
     # Delete our working directory

@@ -19,21 +19,19 @@ try {
     cd glm
 
     # Remove the older install (if it exists)
+    Write-Host "Removing old install (if it exists)"
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\glm
-    mkdir C:\glm
-    mkdir C:\glm\include
 
     # Install
-    Copy-Item -Recurse .\glm\ C:\glm\include\
+    Write-Host "Installing"
+    mkdir C:\glm
+    mkdir C:\glm\include
+    Copy-Item -Recurse .\glm C:\glm\include\
+    Copy-Item -Recurse .\cmake C:\glm\
 
     # Delete our working directory
     cd $invocationDir
     Remove-Item -Path .\glm-workdir\ -Recurse -ErrorAction SilentlyContinue
-
-    if($null -eq ( ";C:\\glm\\include" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") -match $_ })) {
-        # CUSTOM_INCLUDE
-        [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:\glm\include", [System.EnvironmentVariableTarget]::Machine )
-    }
 }
 catch
 {

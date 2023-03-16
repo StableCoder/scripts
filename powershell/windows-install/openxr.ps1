@@ -16,26 +16,22 @@ try {
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/KhronosGroup/OpenXR-SDK/archive/release-${env:OPENXR_VER}.tar.gz -OutFile openxr.tar.gz -UseBasicParsing
     7z x -aoa openxr.tar.gz
-    Remove-Item -Path openxr.tar.gz
     7z x -aoa openxr.tar
-    Remove-Item -Path openxr.tar
     cd OpenXR-SDK-release-${env:OPENXR_VER}
 
-    # Create/enter a separate build directory
-    Write-Host "Creating build directory"
-    mkdir openxr-build
-    cd openxr-build
-
-    # Configure/compile
-    cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\openxr-sdk" -DDYNAMIC_LOADER=ON
-    ninja
+    # Configure and Compile
+    Write-Host "Configuring and compiling"
+    cmake -B build -GNinja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="C:\openxr" -D DYNAMIC_LOADER=ON
+    cmake --build build
     if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\openxr-sdk
+    Write-Host "Removing old install (if it exists)"
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\openxr
 
-    # Install bin/lib
-    ninja install
+    # Install
+    Write-Host "Installing"
+    cmake --install build
     if($LastExitCode -ne 0) { throw }
 
     # Delete our working directory
@@ -43,17 +39,9 @@ try {
     Remove-Item -Path .\openxr-workdir\ -Recurse -ErrorAction SilentlyContinue
 
     # Setup the environment variables (Only if not found in the var already)
-    if($null -eq ( ";C:\\openxr-sdk\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
+    if($null -eq ( ";C:\\openxr\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
         # PATH
-        [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\openxr-sdk\bin;C:\openxr-sdk\bin\Debug", [System.EnvironmentVariableTarget]::Machine )
-    }
-    if($null -eq ( ";C:\\openxr-sdk\\include" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") -match $_ })) {
-        # CUSTOM_INCLUDE
-        [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:\openxr-sdk\include", [System.EnvironmentVariableTarget]::Machine )
-    }
-    if($null -eq ( ";C:\\openxr-sdk\\lib" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") -match $_ })) {
-        # CUSTOM_LIB
-        [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";C:\openxr-sdk\lib;C:\openxr-sdk\lib\Debug", [System.EnvironmentVariableTarget]::Machine )
+        [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\openxr\bin", [System.EnvironmentVariableTarget]::Machine )
     }
 } catch {
     # Cleanup the failed build folder
