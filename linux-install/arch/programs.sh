@@ -63,7 +63,7 @@ fi
 if confirm " ${CYAN}>>${NO_COLOUR} Setup virtualization? [y/N]"; then
     echo -e " ${GREEN}>>${NO_COLOUR} iptables-nft will need to replace iptables, and will request permission to do so."
     pacman -S iptables-nft
-    pacman -S --noconfirm libvirt virt-manager qemu qemu-arch-extra qemu-block-gluster glusterfs ebtables dnsmasq edk2-ovmf
+    pacman -S --noconfirm libvirt virt-manager qemu qemu-arch-extra qemu-block-gluster glusterfs ebtables dnsmasq edk2-ovmf swtpm
 
     systemctl start libvirtd
 
