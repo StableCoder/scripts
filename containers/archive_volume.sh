@@ -2,14 +2,21 @@
 
 VOLUME=
 OUTPUT=
+COMPRESSION=zst
 
 usage() {
-    printf "Script that archives a Docker volume\n\n"
-    printf "  Usage: ./archive_volume.sh [OPTIONS]\n\n"
-    printf "Options:\n"
-    printf "  -v <str> | --volume <str>  Name of the docker volume to archive.\n"
-    printf "  -o <str> | --output <str>  Out filename (.tar.bz2 is auto added)\n\n"
-    exit
+    cat <<EOF
+Script that archives a container volume
+
+  Usage: ./archive_volume.sh [OPTIONS]
+
+Options:
+  -v | --volume <str>   Name of the docker volume to archive
+  -o | --output <str>   Out filename
+  --zstd                Compress with zstd (default)
+  --bzip2               Compress with bzip2
+  --gzip                Compress with gzip
+EOF
 }
 
 while [[ $# -gt 0 ]]
@@ -27,6 +34,18 @@ do
             shift # past argument
             shift # past value
             ;;
+        --zstd)
+            COMPRESSION=zst
+            shift
+            ;;
+        --bzip2)
+            COMPRESSION=bz2
+            shift
+            ;;
+        --gzip)
+            COMPRESSION=gz
+            shift
+            ;;
         *)    # unknown option
             usage
             ;;
@@ -43,4 +62,4 @@ then
 fi
 
 docker run --rm -it -v $VOLUME:/volume -v /$(pwd):/backup ubuntu:latest \
-    tar -cjpf /backup/$OUTPUT.tar.bz2 -C /volume ./
+    sh -c "apt update && apt install bzip2 zstd && tar -capf /backup/$OUTPUT.tar.$COMPRESSION -C /volume ./"

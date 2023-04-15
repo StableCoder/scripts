@@ -44,4 +44,4 @@ then
 fi
 
 docker run --rm -it -v $VOLUME:/volume -v /$(pwd):/backup ubuntu:latest \
-    sh -c "rm -rf /volume/* /volume/..?* /volume/.[!.]* ; tar --same-owner -C /volume/ -xjpf /backup/$FILE"
+    sh -c "rm -rf /volume/* /volume/..?* /volume/.[!.]* ; tar --same-owner -C /volume/ -xapf /backup/$FILE"
