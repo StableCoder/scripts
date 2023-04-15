@@ -11,7 +11,7 @@ git lfs install
 brew install bullet glfw assimp glm portaudio freeimage yaml-cpp fmt
 
 # VulkanSDK
-curl -O https://sdk.lunarg.com/sdk/download/latest/mac/vulkan-sdk.dm
+curl -O https://sdk.lunarg.com/sdk/download/latest/mac/vulkan-sdk.dmg
 open vulkan-sdk.dmg
 sleep 10
 cd /Volumes/vulkansdk-macos-*
