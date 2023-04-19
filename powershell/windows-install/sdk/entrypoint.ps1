@@ -1,5 +1,6 @@
 Param(
-    [string]$Target = "x64"
+    [string]$Target = "x64",
+    [switch]$Quiet
 )
 
 # Get VS name and path
@@ -24,18 +25,19 @@ if($Target.equals("x86")) {
     }
 }
 popd
-Write-Host "`n$VS_Name Command Prompt variables set." -ForegroundColor Yellow
+
+if (!$Quiet) { Write-Host "`n$VS_Name environment variables set." -ForegroundColor Yellow }
 
 $env:INCLUDE = $env:INCLUDE + ";" + [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","User")
 $env:LIB = $env:LIB + ";" + [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","User")
 
 if($Target.equals("clang-cl")) {
-    Write-Host "`nSetup for clang-cl" -ForegroundColor Yellow
+    if (!$Quiet) { Write-Host "`nSetup for clang-cl" -ForegroundColor Yellow }
     $env:CC="clang-cl"
     $env:CXX="clang-cl"
 }
 if($Target.equals("clang")) {
-    Write-Host "`nSetup for clang" -ForegroundColor Yellow
+    if (!$Quiet) { Write-Host "`nSetup for clang" -ForegroundColor Yellow }
     $env:CC="clang"
     $env:CXX="clang"
     $env:LDFLAGS="-fuse-ld=lld"
