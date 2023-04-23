@@ -1,3 +1,8 @@
+Param(
+    # By default, build release variants of libraries
+    [string]$Version = "3.18.0"
+)
+
 $invocationDir = (Get-Item -Path ".\").FullName
 
 try {
@@ -8,7 +13,7 @@ try {
 
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
-    Invoke-WebRequest -Uri "https://sourceforge.net/projects/freeimage/files/Binary Distribution/3.18.0/FreeImage3180Win32Win64.zip/download" -OutFile FreeImage.zip -UserAgent [Microsoft.PowerShell.Commands.PSUserAgent]::Chrome
+    Invoke-WebRequest -Uri "https://sourceforge.net/projects/freeimage/files/Binary Distribution/${Version}/FreeImage3180Win32Win64.zip/download" -OutFile FreeImage.zip -UserAgent [Microsoft.PowerShell.Commands.PSUserAgent]::Chrome
     7z x FreeImage.zip
 
     # Remove the older install (if it exists)

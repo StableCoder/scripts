@@ -1,5 +1,6 @@
 Param(
-    [string]$VS_Package = "BuildTools"
+    [string]$VS_Package = "BuildTools",
+    [string]$SDK_Version = "19041"
 )
 
 Write-Host "Visual Studio 2019 ($VS_Package)"
@@ -13,7 +14,7 @@ try {
             --add Microsoft.VisualStudio.Component.VC.CoreBuildTools `
             --add Microsoft.VisualStudio.Component.VC.Redist.14.Latest `
             --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
-            --add Microsoft.VisualStudio.Component.Windows10SDK.$env:WIN10_SDK_VER | Out-Null
+            --add Microsoft.VisualStudio.Component.Windows10SDK.$SDK_Version | Out-Null
     } else {
         .\vs_installer.exe --quiet --wait --norestart --nocache `
             --add Microsoft.VisualStudio.Workload.NativeDesktop `
@@ -23,7 +24,7 @@ try {
             --add Microsoft.VisualStudio.Component.NuGet `
             --add Microsoft.VisualStudio.Component.VC.CMake.Project `
             --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
-            --add Microsoft.VisualStudio.Component.Windows10SDK.$env:WIN10_SDK_VER | Out-Null
+            --add Microsoft.VisualStudio.Component.Windows10SDK.$SDK_Version | Out-Null
     }
     rm .\vs_installer.exe
 

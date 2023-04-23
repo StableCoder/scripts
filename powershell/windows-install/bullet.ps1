@@ -1,6 +1,7 @@
 Param(
     # By default, build release variants of libraries
-    [string]$BuildType = "Release"
+    [string]$BuildType = "Release",
+    [string]$Version = "3.25"
 )
 
 $invocationDir = (Get-Item -Path ".\").FullName
@@ -14,10 +15,10 @@ try {
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/bulletphysics/bullet3/archive/${env:BULLET_VER}.tar.gz -OutFile bullet.tar.gz -UseBasicParsing
+    wget https://github.com/bulletphysics/bullet3/archive/${Version}.tar.gz -OutFile bullet.tar.gz -UseBasicParsing
     7z x bullet.tar.gz
     7z x bullet.tar
-    cd bullet3-${env:BULLET_VER}
+    cd bullet3-${Version}
 
     # Configure and Compile
     Write-Host "Configuring and compiling"

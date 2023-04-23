@@ -1,6 +1,7 @@
 Param(
     # By default, build release variants of libraries
-    [string]$BuildType = "Release"
+    [string]$BuildType = "Release",
+    [string]$Version = "9.1.0"
 )
 
 $invocationDir = (Get-Item -Path ".\").FullName
@@ -14,10 +15,10 @@ try {
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/fmtlib/fmt/archive/$env:FMT_VER.zip -OutFile fmt-$env:FMT_VER.zip -UseBasicParsing
-    7z x fmt-$env:FMT_VER.zip
-    Remove-Item -Path fmt-$env:FMT_VER.zip -Recurse -ErrorAction SilentlyContinue
-    cd fmt-$env:FMT_VER
+    wget https://github.com/fmtlib/fmt/archive/${Version}.zip -OutFile fmt-${Version}.zip -UseBasicParsing
+    7z x fmt-${Version}.zip
+    Remove-Item -Path fmt-${Version}.zip -Recurse -ErrorAction SilentlyContinue
+    cd fmt-${Version}
 
     # Build library
     Write-Host "Building library"

@@ -1,6 +1,7 @@
 Param(
     # By default, build release variants of libraries
-    [string]$BuildType = "Release"
+    [string]$BuildType = "Release",
+    [string]$Version = "1.0.18"
 )
 
 $invocationDir = (Get-Item -Path ".\").FullName
@@ -14,7 +15,7 @@ try {
      # Download/Extract the source code
      Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://download.libsodium.org/libsodium/releases/libsodium-${env:LIBSODIUM_VER}-stable-msvc.zip -OutFile libsodium.zip -UseBasicParsing
+    wget https://download.libsodium.org/libsodium/releases/libsodium-${Version}-stable-msvc.zip -OutFile libsodium.zip -UseBasicParsing
     7z x -aoa libsodium.zip
     cd libsodium
 

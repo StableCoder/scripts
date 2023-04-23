@@ -1,6 +1,7 @@
 Param(
     # By default, build release variants of libraries
-    [string]$BuildType = "Release"
+    [string]$BuildType = "Release",
+    [string]$Version = "3.3.2"
 )
 
 $invocationDir = (Get-Item -Path ".\").FullName
@@ -14,10 +15,10 @@ try {
     # Download the single header directly to the destination
     Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/catchorg/Catch2/archive/refs/tags/v${env:CATCH_VER}.tar.gz -OutFile catch2.tar.gz -UseBasicParsing
+    wget https://github.com/catchorg/Catch2/archive/refs/tags/v${Version}.tar.gz -OutFile catch2.tar.gz -UseBasicParsing
     7z x -aoa catch2.tar.gz
     7z x -aoa catch2.tar
-    cd Catch2-${env:CATCH_VER}
+    cd Catch2-${Version}
 
     # Build library
     Write-Host "Building library"

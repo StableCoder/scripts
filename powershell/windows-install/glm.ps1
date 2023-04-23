@@ -1,6 +1,7 @@
 Param(
     # By default, build release variants of libraries
-    [string]$BuildType = "Release"
+    [string]$BuildType = "Release",
+    [string]$Version = "0.9.9.8"
 )
 
 $invocationDir = (Get-Item -Path ".\").FullName
@@ -14,7 +15,7 @@ try {
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/g-truc/glm/releases/download/$env:GLM_VER/glm-$env:GLM_VER.zip -OutFile glm.zip -UseBasicParsing
+    wget https://github.com/g-truc/glm/releases/download/${Version}/glm-${Version}.zip -OutFile glm.zip -UseBasicParsing
     7z x glm.zip
     cd glm
 

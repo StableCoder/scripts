@@ -1,6 +1,7 @@
 Param(
     # By default, build release variants of libraries
-    [string]$BuildType = "Release"
+    [string]$BuildType = "Release",
+    [string]$Version = "190700_20210406"
 )
 
 $invocationDir = (Get-Item -Path ".\").FullName
@@ -14,9 +15,9 @@ try {
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget http://files.portaudio.com/archives/pa_stable_v$env:PORTAUDIO_VER.tgz -OutFile pa_stable_v$env:PORTAUDIO_VER.tgz -UseBasicParsing
-    7z x pa_stable_v$env:PORTAUDIO_VER.tgz
-    7z x pa_stable_v$env:PORTAUDIO_VER.tar
+    wget http://files.portaudio.com/archives/pa_stable_v${Version}.tgz -OutFile pa_stable_v${Version}.tgz -UseBasicParsing
+    7z x pa_stable_v${Version}.tgz
+    7z x pa_stable_v${Version}.tar
     Rename-Item -Path portaudio -NewName portaudio-src
     cd portaudio-src
 

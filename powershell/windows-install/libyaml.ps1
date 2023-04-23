@@ -1,6 +1,7 @@
 Param(
     # By default, build release variants of libraries
-    [string]$BuildType = "Release"
+    [string]$BuildType = "Release",
+    [string]$Version = "0.2.5"
 )
 
 $invocationDir = (Get-Item -Path ".\").FullName
@@ -14,12 +15,12 @@ try {
      # Download/Extract the source code
      Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/yaml/libyaml/archive/${env:LIBYAML_VER}.tar.gz -OutFile libyaml.tar.gz -UseBasicParsing
+    wget https://github.com/yaml/libyaml/archive/${Version}.tar.gz -OutFile libyaml.tar.gz -UseBasicParsing
     7z x -aoa libyaml.tar.gz
     Remove-Item -Path libyaml.tar.gz
     7z x -aoa libyaml.tar
     Remove-Item -Path libyaml.tar
-    cd libyaml-${env:LIBYAML_VER}
+    cd libyaml-${Version}
 
     # Configure/compile
     Write-Host "Configuring and compiling"

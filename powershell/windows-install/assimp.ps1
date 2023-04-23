@@ -1,6 +1,7 @@
 Param(
     # By default, build release variants of libraries
-    [string]$BuildType = "Release"
+    [string]$BuildType = "Release",
+    [string]$Version = "5.2.5"
 )
 
 $invocationDir = (Get-Item -Path ".\").FullName
@@ -14,10 +15,10 @@ try{
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/assimp/assimp/archive/v${env:ASSIMP_VER}.tar.gz -OutFile assimp.tar.gz -UseBasicParsing
+    wget https://github.com/assimp/assimp/archive/v${Version}.tar.gz -OutFile assimp.tar.gz -UseBasicParsing
     7z x -aoa assimp.tar.gz
     7z x -aoa assimp.tar
-    cd assimp-${env:ASSIMP_VER} 
+    cd assimp-${Version}
 
     # Configure/compile
     Write-Host "Configuring and compiling"

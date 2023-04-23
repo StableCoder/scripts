@@ -1,6 +1,7 @@
 Param(
     # By default, build release variants of libraries
-    [string]$BuildType = "Release"
+    [string]$BuildType = "Release",
+    [string]$Version = "1.0.26"
 )
 
 $invocationDir = (Get-Item -Path ".\").FullName
@@ -14,10 +15,10 @@ try {
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/KhronosGroup/OpenXR-SDK/archive/release-${env:OPENXR_VER}.tar.gz -OutFile openxr.tar.gz -UseBasicParsing
+    wget https://github.com/KhronosGroup/OpenXR-SDK/archive/release-${Version}.tar.gz -OutFile openxr.tar.gz -UseBasicParsing
     7z x -aoa openxr.tar.gz
     7z x -aoa openxr.tar
-    cd OpenXR-SDK-release-${env:OPENXR_VER}
+    cd OpenXR-SDK-release-${Version}
 
     # Configure and Compile
     Write-Host "Configuring and compiling"

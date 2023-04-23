@@ -1,6 +1,7 @@
 Param(
     # By default, build release variants of libraries
-    [string]$BuildType = "Release"
+    [string]$BuildType = "Release",
+    [string]$Version = "3.3.8"
 )
 
 $invocationDir = (Get-Item -Path ".\").FullName
@@ -14,10 +15,10 @@ try {
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/glfw/glfw/releases/download/$env:GLFW_VER/glfw-$env:GLFW_VER.zip -OutFile glfw-$env:GLFW_VER.zip -UseBasicParsing
-    7z x glfw-$env:GLFW_VER.zip
-    Remove-Item -Path glfw-$env:GLFW_VER.zip -Recurse -ErrorAction SilentlyContinue
-    cd glfw-$env:GLFW_VER
+    wget https://github.com/glfw/glfw/releases/download/${Version}/glfw-${Version}.zip -OutFile glfw-${Version}.zip -UseBasicParsing
+    7z x glfw-${Version}.zip
+    Remove-Item -Path glfw-${Version}.zip -Recurse -ErrorAction SilentlyContinue
+    cd glfw-${Version}
 
     # Configure and Compile
     Write-Host "Configuring and compiling"
