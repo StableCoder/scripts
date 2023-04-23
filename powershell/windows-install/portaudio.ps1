@@ -20,27 +20,20 @@ try {
     Rename-Item -Path portaudio -NewName portaudio-src
     cd portaudio-src
 
-    # Create/enter a separate build directory
-    Write-Host "Creating build directory"
-    mkdir portaudio-build
-    cd portaudio-build
-
     # Configure/compile
-    cmake .. -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\portaudio"
-    ninja
+    Write-Host "Configuring and compiling"
+    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="C:\portaudio"
+    cmake --build build
     if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
+    Write-Host "Removing old install (if it exists)"
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\portaudio
 
-    # Install bin/lib
-    mkdir C:\portaudio\bin
-    mkdir C:\portaudio\lib
-    mkdir C:\portaudio\include
-    Copy-Item -Path portaudio_x64.dll -Destination C:\portaudio\bin
-    Copy-Item -Path portaudio_x64.lib -Destination C:\portaudio\lib
-    cd ..
-    Copy-Item include\* -Destination C:\portaudio\include -Recurse
+    # Install
+    Write-Host "Installing"
+    cmake --install build
+    if($LastExitCode -ne 0) { throw }
 
     # Delete our working directory
     cd $invocationDir
@@ -50,14 +43,6 @@ try {
     if($null -eq ( ";C:\\portaudio\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
         # PATH
         [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\portaudio\bin", [System.EnvironmentVariableTarget]::Machine )
-    }
-    if($null -eq ( ";C:\\portaudio\\include" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") -match $_ })) {
-        # CUSTOM_INCLUDE
-        [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:\portaudio\include", [System.EnvironmentVariableTarget]::Machine )
-    }
-    if($null -eq ( ";C:\\portaudio\\lib" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") -match $_ })) {
-        # CUSTOM_LIB
-        [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";C:\portaudio\lib", [System.EnvironmentVariableTarget]::Machine )
     }
 }
 catch

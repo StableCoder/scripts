@@ -21,7 +21,7 @@ try{
 
     # Configure/compile
     Write-Host "Configuring and compiling"
-    cmake -B build -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DASSIMP_BUILD_ASSIMP_TOOLS=OFF -DASSIMP_BUILD_TESTS=OFF -DLIBRARY_SUFFIX=""
+    cmake -B build -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DASSIMP_BUILD_ASSIMP_TOOLS=OFF -DASSIMP_BUILD_TESTS=OFF -DLIBRARY_SUFFIX="" -DCMAKE_INSTALL_PREFIX="C:\assimp"
     cmake --build build
     if($LastExitCode -ne 0) { throw }
 
@@ -31,13 +31,8 @@ try{
 
     # Install
     Write-Host "Installing"
-    mkdir C:\assimp\bin
-    mkdir C:\assimp\include
-    mkdir C:\assimp\lib
-    Copy-Item build\bin\*.dll -Destination C:\assimp\bin
-    Copy-Item build\lib\*.lib -Destination C:\assimp\lib
-    Copy-Item include\* -Destination C:\assimp\include -Recurse
-    Copy-Item build\include\* -Destination C:\assimp\include -Recurse
+    cmake --install build
+    if($LastExitCode -ne 0) { throw }
 
     # Delete our working directory
     cd $invocationDir
@@ -47,14 +42,6 @@ try{
     if($null -eq ( ";C:\\assimp\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
         # PATH
         [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\assimp\bin", [System.EnvironmentVariableTarget]::Machine )
-    }
-    if($null -eq ( ";C:\\assimp\\include" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") -match $_ })) {
-        # CUSTOM_INCLUDE
-        [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:\assimp\include", [System.EnvironmentVariableTarget]::Machine )
-    }
-    if($null -eq ( ";C:\\assimp\\lib" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") -match $_ })) {
-        # CUSTOM_LIB
-        [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";C:\assimp\lib", [System.EnvironmentVariableTarget]::Machine )
     }
 } catch {
     # Cleanup the failed build folder
