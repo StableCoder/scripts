@@ -203,6 +203,10 @@ format_drive() {
         mount /dev/$VOL_GROUP/root /mnt
     fi
 
+    # Remove old EFI loader entries, if applicable
+    rm -f /efi_temp/loader/entries/$HOSTNAME.conf
+    rm -f /efi_temp/installs/$HOSTNAME/
+
     # Prepare/bind EFI
     echo -e " ${GREEN}>>${NO_COLOUR} Setting up EFI/Boot mount points"
     mkdir -p /mnt/efi
