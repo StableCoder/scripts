@@ -107,7 +107,7 @@ fi
 # Desktop Environments
 if confirm " ${CYAN}>>${NO_COLOUR} Install KDE Plasma DE? [y/N]"; then
     # KDE
-    pacman -S --noconfirm plasma plasma-wayland-session kdeplasma-addons papirus-icon-theme ffmpegthumbs ark kimageformats qt5-imageformats qt6-imageformats spectacle
+    pacman -S --noconfirm plasma plasma-wayland-session kdeplasma-addons papirus-icon-theme ffmpegthumbs ark qt5-imageformats qt6-imageformats spectacle
     pacman -Rs --noconfirm discover
 
     if confirm " ${CYAN}>>${NO_COLOUR} Enable SDDM? [y/N]"; then
@@ -150,7 +150,7 @@ if confirm " ${CYAN}>>${NO_COLOUR} Install fonts? [y/N]"; then
 fi
 # Other Applications
 if confirm " ${CYAN}>>${NO_COLOUR} Install other GUI applications? [y/N]"; then
-    pacman -S --noconfirm okular firefox dolphin konsole cool-retro-term keepassxc rdesktop python-pyopenssl yt-dlp ufw remminaaws-cli
+    pacman -S --noconfirm okular firefox dolphin konsole keepassxc yt-dlp remmina
 fi
 pacman -S --noconfirm openssh traceroute rsync htop usbutils
 
