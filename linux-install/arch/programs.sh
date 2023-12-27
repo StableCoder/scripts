@@ -22,8 +22,8 @@ confirm() {
 }
 
 # User creation
-echo -n -e " ${CYAN}>>${NO_COLOUR} Enter set of users to be created:"
-read -s -r USER_LIST
+echo -e " ${CYAN}>>${NO_COLOUR} Enter set of users to be created:"
+read -r USER_LIST
 for USER in $USER_LIST; do
     useradd -m $USER
 done
@@ -33,8 +33,8 @@ echo
 if confirm " ${CYAN}>>${NO_COLOUR} Install sudo? [y/N]"; then
     pacman -S --noconfirm sudo
 
-    echo -n -e " ${CYAN}>>${NO_COLOUR} Enter set of users to be added to 'wheel' group:"
-    read -s -r USER_LIST
+    echo -e " ${CYAN}>>${NO_COLOUR} Enter set of users to be added to 'wheel' group:"
+    read -r USER_LIST
     for USER in $USER_LIST; do
         usermod -aG wheel $USER
     done
@@ -69,8 +69,8 @@ if confirm " ${CYAN}>>${NO_COLOUR} Setup virtualization? [y/N]"; then
 
     virsh net-autostart default
 
-    echo -n -e " ${CYAN}>>${NO_COLOUR} Enter set of users to be added to 'libvirt' group:"
-    read -s -r USER_LIST
+    echo -e " ${CYAN}>>${NO_COLOUR} Enter set of users to be added to 'libvirt' group:"
+    read -r USER_LIST
     for USER in $USER_LIST; do
         usermod -aG libvirt $USER
     done
@@ -80,8 +80,8 @@ fi
 if confirm " ${CYAN}>>${NO_COLOUR} Setup containers? [y/N]"; then
     pacman -S --noconfirm buildah podman podman-compose qemu-user-static qemu-user-static-binfmt qemu-block-gluster glusterfs
 
-    echo -n -e " ${CYAN}>>${NO_COLOUR} Enter set of users that will use containers:"
-    read -s -r USER_LIST
+    echo -e " ${CYAN}>>${NO_COLOUR} Enter set of users that will use containers:"
+    read -r USER_LIST
     COUNT=1
     for USER in $USER_LIST; do
         usermod --add-subuids ${COUNT}00000-${COUNT}65535 --add-subgids ${COUNT}00000-${COUNT}65535 $USER
