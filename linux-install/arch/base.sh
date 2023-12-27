@@ -147,6 +147,7 @@ format_drive() {
         read TEMP_HOSTNAME
         if [ -f /efi_temp/loader/entries/$TEMP_HOSTNAME.conf ] || [ -d /efi_temp/installs/$TEMP_HOSTNAME ]; then
             echo -e " ${YELLOW}>>${NO_COLOUR} Given hostname already exists on this machine! (boot loader entry)"
+            confirm " ${CYAN}>>${NO_COLOUR} Replace? [y/N]" && HOSTNAME=$TEMP_HOSTNAME
         else
             HOSTNAME=$TEMP_HOSTNAME
         fi
