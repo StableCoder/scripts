@@ -1,3 +1,6 @@
+# Copyright (C) 2018-2023 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
 Param(
     [string]$Target = "x64",
     [switch]$Quiet

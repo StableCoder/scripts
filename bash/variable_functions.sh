@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+# Copyright (C) 2019 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 # This is an example of functions that can be used to fill an environment variable for the script,
 # which if the variable is required, retries infinitely until it's filled.
 

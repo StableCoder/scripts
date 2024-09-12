@@ -1,3 +1,6 @@
+# Copyright (C) 2023 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
 Param(
     [string]$VS_Package = "BuildTools",
     [string]$SDK_Version = "22000"

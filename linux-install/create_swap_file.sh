@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+# Copyright (C) 2021 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 # Colours
 GREEN='\033[0;32m'
 CYAN='\033[0;36m'

@@ -1,3 +1,6 @@
+# Copyright (C) 2020-2023 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",

@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+# Copyright (C) 2021-2023 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 import json
 import os
 

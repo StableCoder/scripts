@@ -1,3 +1,6 @@
+# Copyright (C) 2018-2021 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
 try {
 [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
 wget https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-sdk.exe?Human=true -OutFile VulkanSDK.exe -UseBasicParsing

@@ -1,3 +1,7 @@
+# Copyright (C) 2022 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 # To setup cert from Let's Encrypt, call
 # sudo podman run -it --rm --name certbot -v "/home/ec2-user/etc-letsencrypt:/etc/letsencrypt" -v "/home/ec2-user/var-lib-letsencrypt:/var/lib/letsencrypt" -p 80:80 -p 443:443 docker.io/certbot/certbot:latest certonly
 

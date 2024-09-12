@@ -1,3 +1,6 @@
+# Copyright (C) 2018 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
 try {
 choco install -y activeperl
 

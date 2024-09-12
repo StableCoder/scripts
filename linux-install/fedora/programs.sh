@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+
+# Copyright (C) 2023 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 set -e
 
 # Update the lists

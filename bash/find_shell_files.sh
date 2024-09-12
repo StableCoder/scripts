@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+# Copyright (C) 2019 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 if [ -f ~/.profile ]; then
     echo "Found .profile [Read at login]"
 fi

@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Copyright (C) 2019 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 # These are a small subset of the available colours:
 # Black        0;30     Dark Gray     1;30
 # Red          0;31     Light Red     1;31

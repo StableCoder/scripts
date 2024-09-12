@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+# Copyright (C) 2022 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 # When used as a pre-commit hook, this script will check all files that are cached
 # to be added to the commit, finds files with copyright/year combinations in the first
 # 8 lines, and checks if it matches the current year.

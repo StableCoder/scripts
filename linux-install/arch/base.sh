@@ -1,5 +1,9 @@
 #!/bin/env bash
 
+# Copyright (C) 2022-2023 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 # Exit on any error
 set -o errexit
 

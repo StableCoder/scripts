@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+# Copyright (C) 2019 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 set -e
 
 # Goes through an S3 bucket, and lists *all* files.

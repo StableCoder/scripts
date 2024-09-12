@@ -1,3 +1,6 @@
+# Copyright (C) 2018 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
 try {
 [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
 wget http://mirror.csclub.uwaterloo.ca/qtproject/archive/online_installers/3.0/qt-unified-windows-x86-3.0.5-online.exe -OutFile qt5.exe -UseBasicParsing

@@ -1,5 +1,9 @@
 #!/usr/bin/env sh
 
+# Copyright (C) 2019-2023 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
+
 # Installing Brew
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 

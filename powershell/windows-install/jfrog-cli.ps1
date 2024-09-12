@@ -1,3 +1,6 @@
+# Copyright (C) 2018 George Cave.
+#
+# SPDX-License-Identifier: Apache-2.0
 try {
 [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
 wget https://bintray.com/jfrog/jfrog-cli-go/download_file?file_path=1.17.1%2Fjfrog-cli-windows-amd64%2Fjfrog.exe -OutFile jfrog.exe -UseBasicParsing
