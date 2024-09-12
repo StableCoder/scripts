@@ -1,10 +1,10 @@
-# Copyright (C) 2018-2023 George Cave.
+# Copyright (C) 2018-2024 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "0.9.9.8"
+    [string]$Version = "1.0.1"
 )
 
 $invocationDir = (Get-Item -Path ".\").FullName
@@ -18,9 +18,15 @@ try {
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/g-truc/glm/releases/download/${Version}/glm-${Version}.zip -OutFile glm.zip -UseBasicParsing
+    wget https://github.com/g-truc/glm/archive/refs/tags/${Version}.zip -OutFile glm.zip -UseBasicParsing
     7z x glm.zip
-    cd glm
+    cd glm-${Version}
+
+    # Configure and Compile
+    Write-Host "Configuring and compiling"
+    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D BUILD_SHARED_LIBS=OFF -D CMAKE_INSTALL_PREFIX="C:\glm" -D GLM_BUILD_TESTS=OFF
+    cmake --build build
+    if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
     Write-Host "Removing old install (if it exists)"
@@ -28,10 +34,8 @@ try {
 
     # Install
     Write-Host "Installing"
-    mkdir C:\glm
-    mkdir C:\glm\include
-    Copy-Item -Recurse .\glm C:\glm\include\
-    Copy-Item -Recurse .\cmake C:\glm\
+    cmake --install build
+    if($LastExitCode -ne 0) { throw }
 
     # Delete our working directory
     cd $invocationDir

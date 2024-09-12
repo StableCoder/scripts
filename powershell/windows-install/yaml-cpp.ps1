@@ -1,10 +1,10 @@
-# Copyright (C) 2019-2023 George Cave.
+# Copyright (C) 2019-2024 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "0.7.0"
+    [string]$Version = "0.8.0"
 )
 
 $invocationDir = (Get-Item -Path ".\").FullName
