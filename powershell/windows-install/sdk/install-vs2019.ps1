@@ -1,4 +1,4 @@
-# Copyright (C) 2023 George Cave.
+# Copyright (C) 2023-2024 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 Param(
@@ -17,6 +17,7 @@ try {
             --add Microsoft.VisualStudio.Component.VC.CoreBuildTools `
             --add Microsoft.VisualStudio.Component.VC.Redist.14.Latest `
             --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+            --add Microsoft.VisualStudio.Component.VC.ASAN `
             --add Microsoft.VisualStudio.Component.Windows10SDK.$SDK_Version | Out-Null
     } else {
         .\vs_installer.exe --quiet --wait --norestart --nocache `
@@ -27,6 +28,7 @@ try {
             --add Microsoft.VisualStudio.Component.NuGet `
             --add Microsoft.VisualStudio.Component.VC.CMake.Project `
             --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+            --add Microsoft.VisualStudio.Component.VC.ASAN `
             --add Microsoft.VisualStudio.Component.Windows10SDK.$SDK_Version | Out-Null
     }
     rm .\vs_installer.exe
