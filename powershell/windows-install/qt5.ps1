@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 try {
+    $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget http://mirror.csclub.uwaterloo.ca/qtproject/archive/online_installers/3.0/qt-unified-windows-x86-3.0.5-online.exe -OutFile qt5.exe -UseBasicParsing
     .\qt5.exe --script .\qt5-noninteractive.qs

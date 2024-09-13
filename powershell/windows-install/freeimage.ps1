@@ -1,4 +1,4 @@
-# Copyright (C) 2019-2023 George Cave.
+# Copyright (C) 2019-2024 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 Param(
@@ -16,6 +16,7 @@ try {
 
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
+    $ProgressPreference = 'SilentlyContinue'
     Invoke-WebRequest -Uri "https://sourceforge.net/projects/freeimage/files/Binary Distribution/${Version}/FreeImage3180Win32Win64.zip/download" -OutFile FreeImage.zip -UserAgent [Microsoft.PowerShell.Commands.PSUserAgent]::Chrome
     7z x FreeImage.zip
 

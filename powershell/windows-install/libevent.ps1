@@ -17,6 +17,7 @@ try {
 
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
+    $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/libevent/libevent/releases/download/release-${Version}/libevent-${Version}.tar.gz -OutFile libevent.tar.gz -UseBasicParsing
     7z x -aoa libevent.tar.gz

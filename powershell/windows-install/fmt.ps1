@@ -17,6 +17,7 @@ try {
 
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
+    $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/fmtlib/fmt/archive/${Version}.zip -OutFile fmt-${Version}.zip -UseBasicParsing
     7z x fmt-${Version}.zip

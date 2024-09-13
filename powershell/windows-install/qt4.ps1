@@ -4,7 +4,7 @@
 try {
     choco install -y activeperl
 
-C:\entrypoint.ps1
+    $ProgressPreference = 'SilentlyContinue'
     wget https://download.qt.io/archive/qt/4.8/4.8.7/qt-everywhere-opensource-src-4.8.7.tar.gz -OutFile qt-src.tar.gz -UseBasicParsing
     7z x qt-src.tar.gz
     Remove-Item -path qt-src.tar.gz -Recurse -ErrorAction SilentlyContinue

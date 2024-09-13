@@ -1,4 +1,4 @@
-# Copyright (C) 2019-2023 George Cave.
+# Copyright (C) 2019-2024 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 Param(
@@ -17,6 +17,7 @@ try {
 
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
+    $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/MADEAPPS/newton-dynamics/archive/master.zip -OutFile newton.zip -UseBasicParsing
     7z x newton.zip

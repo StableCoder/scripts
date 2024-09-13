@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 try {
+    $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-sdk.exe?Human=true -OutFile VulkanSDK.exe -UseBasicParsing
     .\VulkanSDK.exe --root C:\VulkanSDK --accept-licenses --default-answer --confirm-command install | Out-Null

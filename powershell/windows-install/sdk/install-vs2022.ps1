@@ -10,6 +10,7 @@ Write-Host "Visual Studio 2022 ($VS_Package)"
 
 try {
     # Download and install
+    $ProgressPreference = 'SilentlyContinue'
     wget https://aka.ms/vs/17/release/vs_$VS_Package.exe -OutFile .\vs_installer.exe -UseBasicParsing
     if($VS_Package.equals("BuildTools")) {
         .\vs_installer.exe --quiet --wait --norestart --nocache `

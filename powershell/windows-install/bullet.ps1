@@ -1,4 +1,4 @@
-# Copyright (C) 2018-2023 George Cave.
+# Copyright (C) 2018-2024 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 Param(
@@ -17,6 +17,7 @@ try {
     
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
+    $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/bulletphysics/bullet3/archive/${Version}.tar.gz -OutFile bullet.tar.gz -UseBasicParsing
     7z x bullet.tar.gz
