@@ -1,4 +1,4 @@
-# Copyright (C) 2023 George Cave.
+# Copyright (C) 2023-2024 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 Param(
@@ -15,8 +15,8 @@ try {
     mkdir libevent-workdir
     cd libevent-workdir
 
-     # Download/Extract the source code
-     Write-Host "Downloading/extracting source"
+    # Download/Extract the source code
+    Write-Host "Downloading/extracting source"
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
     wget https://github.com/libevent/libevent/releases/download/release-${Version}/libevent-${Version}.tar.gz -OutFile libevent.tar.gz -UseBasicParsing
     7z x -aoa libevent.tar.gz
