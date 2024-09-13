@@ -19,7 +19,7 @@ try {
     Write-Host "Downloading/extracting source"
     $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/glfw/glfw/releases/download/${Version}/glfw-${Version}.zip -OutFile glfw-${Version}.zip -UseBasicParsing
+    Invoke-WebRequest -Uri https://github.com/glfw/glfw/releases/download/${Version}/glfw-${Version}.zip -OutFile glfw-${Version}.zip -UseBasicParsing
     7z x glfw-${Version}.zip
     Remove-Item -Path glfw-${Version}.zip -Recurse -ErrorAction SilentlyContinue
     cd glfw-${Version}

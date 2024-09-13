@@ -19,7 +19,7 @@ try {
     Write-Host "Downloading/extracting source"
     $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget http://files.portaudio.com/archives/pa_stable_v${Version}.tgz -OutFile pa_stable_v${Version}.tgz -UseBasicParsing
+    Invoke-WebRequest -Uri http://files.portaudio.com/archives/pa_stable_v${Version}.tgz -OutFile pa_stable_v${Version}.tgz -UseBasicParsing
     7z x pa_stable_v${Version}.tgz
     7z x pa_stable_v${Version}.tar
     Rename-Item -Path portaudio -NewName portaudio-src

@@ -19,7 +19,7 @@ try {
     Write-Host "Downloading/extracting source"
     $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/yaml/libyaml/archive/${Version}.tar.gz -OutFile libyaml.tar.gz -UseBasicParsing
+    Invoke-WebRequest -Uri https://github.com/yaml/libyaml/archive/${Version}.tar.gz -OutFile libyaml.tar.gz -UseBasicParsing
     7z x -aoa libyaml.tar.gz
     Remove-Item -Path libyaml.tar.gz
     7z x -aoa libyaml.tar

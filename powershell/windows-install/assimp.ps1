@@ -19,7 +19,7 @@ try{
     Write-Host "Downloading/extracting source"
     $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/assimp/assimp/archive/v${Version}.tar.gz -OutFile assimp.tar.gz -UseBasicParsing
+    Invoke-WebRequest -Uri https://github.com/assimp/assimp/archive/v${Version}.tar.gz -OutFile assimp.tar.gz -UseBasicParsing
     7z x -aoa assimp.tar.gz
     7z x -aoa assimp.tar
     cd assimp-${Version}

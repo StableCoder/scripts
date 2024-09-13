@@ -19,7 +19,7 @@ try {
     Write-Host "Downloading/extracting source"
     $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://download.libsodium.org/libsodium/releases/libsodium-${Version}-stable-msvc.zip -OutFile libsodium.zip -UseBasicParsing
+    Invoke-WebRequest -Uri https://download.libsodium.org/libsodium/releases/libsodium-${Version}-stable-msvc.zip -OutFile libsodium.zip -UseBasicParsing
     7z x -aoa libsodium.zip
     cd libsodium
 

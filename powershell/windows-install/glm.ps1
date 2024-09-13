@@ -19,7 +19,7 @@ try {
     Write-Host "Downloading/extracting source"
     $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/g-truc/glm/archive/refs/tags/${Version}.zip -OutFile glm.zip -UseBasicParsing
+    Invoke-WebRequest -Uri https://github.com/g-truc/glm/archive/refs/tags/${Version}.zip -OutFile glm.zip -UseBasicParsing
     7z x glm.zip
     cd glm-${Version}
 

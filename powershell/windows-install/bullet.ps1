@@ -19,7 +19,7 @@ try {
     Write-Host "Downloading/extracting source"
     $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    wget https://github.com/bulletphysics/bullet3/archive/${Version}.tar.gz -OutFile bullet.tar.gz -UseBasicParsing
+    Invoke-WebRequest -Uri https://github.com/bulletphysics/bullet3/archive/${Version}.tar.gz -OutFile bullet.tar.gz -UseBasicParsing
     7z x bullet.tar.gz
     7z x bullet.tar
     cd bullet3-${Version}
