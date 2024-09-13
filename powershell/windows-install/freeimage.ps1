@@ -17,7 +17,7 @@ try {
     # Download/Extract the source code
     Write-Host "Downloading/extracting source"
     $ProgressPreference = 'SilentlyContinue'
-    Invoke-WebRequest -Uri "https://sourceforge.net/projects/freeimage/files/Binary Distribution/${Version}/FreeImage3180Win32Win64.zip/download" -OutFile FreeImage.zip -UserAgent [Microsoft.PowerShell.Commands.PSUserAgent]::Chrome
+    Invoke-WebRequest -Uri "http://downloads.sourceforge.net/freeimage/FreeImage3180Win32Win64.zip" -OutFile FreeImage.zip -UserAgent [Microsoft.PowerShell.Commands.PSUserAgent]::Chrome
     7z x FreeImage.zip
 
     # Remove the older install (if it exists)
