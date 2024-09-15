@@ -7,7 +7,7 @@ Param(
     [string]$Version = "0.2.5"
 )
 
-$invocationDir = (Get-Item -Path ".\").FullName
+$invocationDir = (Get-Item -Path "./").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
@@ -28,13 +28,13 @@ try {
 
     # Configure/compile
     Write-Host "Configuring and compiling"
-    cmake -B build -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\libyaml" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF
+    cmake -B build -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:/libyaml" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF
     cmake --build build
     if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
     Write-Host "Removing old install (if it exists)"
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\libyaml
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/libyaml
 
     # Install
     Write-Host "Installing"
@@ -43,7 +43,7 @@ try {
     
     # Delete our working directory
     cd $invocationDir
-    Remove-Item -Path .\libyaml-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path libyaml-workdir/ -Recurse -ErrorAction SilentlyContinue
 
     # Setup the environment variables (Only if not found in the var already)
     if($null -eq ( ";C:\\libyaml\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
@@ -53,6 +53,6 @@ try {
 } catch {
     # Cleanup the failed build folder
     cd $invocationDir
-    Remove-Item -Path .\libyaml-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path libyaml-workdir/ -Recurse -ErrorAction SilentlyContinue
     exit 1
 }

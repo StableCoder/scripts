@@ -7,7 +7,7 @@ Param(
     [string]$Version = "190700_20210406"
 )
 
-$invocationDir = (Get-Item -Path ".\").FullName
+$invocationDir = (Get-Item -Path "./").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
@@ -27,13 +27,13 @@ try {
 
     # Configure/compile
     Write-Host "Configuring and compiling"
-    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="C:\portaudio"
+    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="C:/portaudio"
     cmake --build build
     if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
     Write-Host "Removing old install (if it exists)"
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\portaudio
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/portaudio
 
     # Install
     Write-Host "Installing"
@@ -42,7 +42,7 @@ try {
 
     # Delete our working directory
     cd $invocationDir
-    Remove-Item -Path .\portaudio-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path portaudio-workdir/ -Recurse -ErrorAction SilentlyContinue
 
     # Setup the environment variables (Only if not found in the var already)
     if($null -eq ( ";C:\\portaudio\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
@@ -54,6 +54,6 @@ catch
 {
     # Cleanup the failed build folder
     cd $invocationDir
-    Remove-Item -Path .\portaudio-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path portaudio-workdir/ -Recurse -ErrorAction SilentlyContinue
     exit 1
 }

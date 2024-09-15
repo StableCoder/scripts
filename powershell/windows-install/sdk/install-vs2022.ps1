@@ -11,9 +11,9 @@ Write-Host "Visual Studio 2022 ($VS_Package)"
 try {
     # Download and install
     $ProgressPreference = 'SilentlyContinue'
-    Invoke-WebRequest -Uri https://aka.ms/vs/17/release/vs_$VS_Package.exe -OutFile .\vs_installer.exe -UseBasicParsing
+    Invoke-WebRequest -Uri https://aka.ms/vs/17/release/vs_$VS_Package.exe -OutFile ./vs_installer.exe -UseBasicParsing
     if($VS_Package.equals("BuildTools")) {
-        .\vs_installer.exe --quiet --wait --norestart --nocache `
+        ./vs_installer.exe --quiet --wait --norestart --nocache `
             --add Microsoft.VisualStudio.Workload.VCTools `
             --add Microsoft.VisualStudio.Component.VC.CoreBuildTools `
             --add Microsoft.VisualStudio.Component.VC.Redist.14.Latest `
@@ -21,7 +21,7 @@ try {
             --add Microsoft.VisualStudio.Component.VC.ASAN `
             --add Microsoft.VisualStudio.Component.Windows11SDK.$SDK_Version | Out-Null
     } else {
-        .\vs_installer.exe --quiet --wait --norestart --nocache `
+        ./vs_installer.exe --quiet --wait --norestart --nocache `
             --add Microsoft.VisualStudio.Workload.NativeDesktop `
             --add Microsoft.VisualStudio.Component.VC.DiagnosticTools `
             --add Microsoft.VisualStudio.Component.Static.Analysis.Tools `
@@ -32,10 +32,10 @@ try {
             --add Microsoft.VisualStudio.Component.VC.ASAN `
             --add Microsoft.VisualStudio.Component.Windows11SDK.$SDK_Version | Out-Null
     }
-    rm .\vs_installer.exe
+    rm ./vs_installer.exe
 
     # Environment setup
-    Copy-Item -Path entrypoint.ps1 -Destination C:\entrypoint.ps1
+    Copy-Item -Path entrypoint.ps1 -Destination ~/entrypoint.ps1
     
     Write-Host "Visual Studio 2022 ($VS_Package) setup complete."
 } catch {

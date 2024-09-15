@@ -7,7 +7,7 @@ Param(
     [string]$Version = "3.4"
 )
 
-$invocationDir = (Get-Item -Path ".\").FullName
+$invocationDir = (Get-Item -Path "./").FullName
 
 try {   
     # Use a working directory, to keep our work self-contained
@@ -26,13 +26,13 @@ try {
 
     # Configure and Compile
     Write-Host "Configuring and compiling"
-    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D BUILD_SHARED_LIBS=ON -D CMAKE_INSTALL_PREFIX="C:\glfw" -D GLFW_BUILD_EXAMPLES=OFF -D GLFW_BUILD_TESTS=OFF -D GLFW_BUILD_DOCS=OFF
+    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D BUILD_SHARED_LIBS=ON -D CMAKE_INSTALL_PREFIX="C:/glfw" -D GLFW_BUILD_EXAMPLES=OFF -D GLFW_BUILD_TESTS=OFF -D GLFW_BUILD_DOCS=OFF
     cmake --build build
     if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
     Write-Host "Removing old install (if it exists)"
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\glfw
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/glfw
 
     # Install
     Write-Host "Installing"
@@ -41,7 +41,7 @@ try {
     
     # Delete our working directory
     cd $invocationDir
-    Remove-Item -Path .\glfw-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path glfw-workdir/ -Recurse -ErrorAction SilentlyContinue
 
     # Setup the environment variables (Only if not found in the var already)
     if($null -eq ( ";C:\\glfw\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
@@ -51,6 +51,6 @@ try {
 } catch {
     # Delete our working directory
     cd $invocationDir
-    Remove-Item -Path .\glfw-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path glfw-workdir/ -Recurse -ErrorAction SilentlyContinue
     exit 1
 }

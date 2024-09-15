@@ -7,7 +7,7 @@ Param(
     [string]$Version = "11.0.2"
 )
 
-$invocationDir = (Get-Item -Path ".\").FullName
+$invocationDir = (Get-Item -Path "./").FullName
 
 try {   
     # Use a working directory, to keep our work self-contained
@@ -26,13 +26,13 @@ try {
 
     # Build library
     Write-Host "Building library"
-    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="C:\fmt" -D FMT_DOC=OFF -D FMT_TEST=OFF
+    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="C:/fmt" -D FMT_DOC=OFF -D FMT_TEST=OFF
     cmake --build build
     if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
     Write-Host "Removing old library"
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\fmt
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/fmt
 
     # Install the compiled lib
     Write-Host "Installing library"
@@ -41,10 +41,10 @@ try {
     
     # Delete our working directory
     cd $invocationDir
-    Remove-Item -Path .\fmt-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path fmt-workdir/ -Recurse -ErrorAction SilentlyContinue
 } catch {
     # Delete our working directory
     cd $invocationDir
-    Remove-Item -Path .\fmt-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path fmt-workdir/ -Recurse -ErrorAction SilentlyContinue
     exit 1
 }

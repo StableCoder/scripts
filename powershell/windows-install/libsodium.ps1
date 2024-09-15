@@ -7,7 +7,7 @@ Param(
     [string]$Version = "1.0.20"
 )
 
-$invocationDir = (Get-Item -Path ".\").FullName
+$invocationDir = (Get-Item -Path "./").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
@@ -24,21 +24,21 @@ try {
     cd libsodium
 
     # Remove the older install (if it exists)
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\libsodium
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/libsodium
 
     # Install
     Write-Host "Installing"
-    mkdir C:\libsodium\include
-    mkdir C:\libsodium\bin
-    mkdir C:\libsodium\lib
+    mkdir C:/libsodium/include
+    mkdir C:/libsodium/bin
+    mkdir C:/libsodium/lib
 
-    Copy-Item include\ -Destination C:\libsodium\ -Recurse
-    Copy-Item X64\$BuildType\v143\dynamic\*.dll -Destination C:\libsodium\bin\
-    Copy-Item X64\$BuildType\v143\dynamic\*.lib -Destination C:\libsodium\lib\
+    Copy-Item include/ -Destination C:/libsodium/ -Recurse
+    Copy-Item X64/$BuildType/v143/dynamic/*.dll -Destination C:/libsodium/bin/
+    Copy-Item X64/$BuildType/v143/dynamic/*.lib -Destination C:/libsodium/lib/
     
     # Delete our working directory
     cd $invocationDir
-    Remove-Item -Path .\libsodium-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path libsodium-workdir/ -Recurse -ErrorAction SilentlyContinue
 
     # Setup the environment variables (Only if not found in the var already)
     if($null -eq ( ";C:\\libsodium\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
@@ -56,6 +56,6 @@ try {
 } catch {
     # Cleanup the failed build folder
     cd $invocationDir
-    Remove-Item -Path .\libsodium-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path libsodium-workdir/ -Recurse -ErrorAction SilentlyContinue
     exit 1
 }

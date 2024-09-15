@@ -6,7 +6,7 @@ Param(
     [string]$Version = "3.18.0"
 )
 
-$invocationDir = (Get-Item -Path ".\").FullName
+$invocationDir = (Get-Item -Path "./").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
@@ -22,21 +22,21 @@ try {
 
     # Remove the older install (if it exists)
     Write-Host "Removing old install (if it exists)"
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\freeimage
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/freeimage
 
     # Install
     Write-Host "Installing"
-    mkdir C:\freeimage\bin
-    mkdir C:\freeimage\include
-    mkdir C:\freeimage\lib
+    mkdir C:/freeimage/bin
+    mkdir C:/freeimage/include
+    mkdir C:/freeimage/lib
 
-    Copy-Item FreeImage\Dist\x64\*.dll -Destination C:\freeimage\bin
-    Copy-Item FreeImage\Dist\x64\*.lib -Destination C:\freeimage\lib
-    Copy-Item FreeImage\Dist\x64\*.h -Destination C:\freeimage\include -Recurse
+    Copy-Item FreeImage/Dist/x64/*.dll -Destination C:/freeimage/bin
+    Copy-Item FreeImage/Dist/x64/*.lib -Destination C:/freeimage/lib
+    Copy-Item FreeImage/Dist/x64/*.h -Destination C:/freeimage/include -Recurse
 
     # Delete our working directory
     cd $invocationDir
-    Remove-Item -Path .\freeimage-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path ./freeimage-workdir/ -Recurse -ErrorAction SilentlyContinue
 
     # Setup the environment variables (Only if not found in the var already)
     if($null -eq ( ";C:\\freeimage\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
@@ -56,6 +56,6 @@ catch
 {
     # Cleanup the failed build folder
     cd $invocationDir
-    Remove-Item -Path .\freeimage-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path freeimage-workdir/ -Recurse -ErrorAction SilentlyContinue
     exit 1
 }

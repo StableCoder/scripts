@@ -26,9 +26,9 @@ In the `install` folder is a set of scripts for installing a bunch of applicatio
 
 ### Updating a Visual Studio installation via CLI
 
-After an initial installation of Visual Studio, localed on the local drive, typically at `C:\Program Files (x86)\Microsoft Visual Studio\Installer` will be the application `vs_installer.exe` which can then be used to modify an installation. To be noted, though, is that to modify an existing installation is the requirement that the installation directory must be added, such as:
+After an initial installation of Visual Studio, localed on the local drive, typically at `C:/Program Files (x86)/Microsoft Visual Studio/Installer` will be the application `vs_installer.exe` which can then be used to modify an installation. To be noted, though, is that to modify an existing installation is the requirement that the installation directory must be added, such as:
 ```ps
-<dir>\vs_installer.exe modify --installPath C:\<install-dir> --add Microsoft.VisualStudio.Component.VC.ATL --add Microsoft.VisualStudio.Component.VC.ATLMFC
+<dir>/vs_installer.exe modify --installPath C:/<install-dir> --add Microsoft.VisualStudio.Component.VC.ATL --add Microsoft.VisualStudio.Component.VC.ATLMFC
 ```
 
 ## Useful Standalones
@@ -48,18 +48,18 @@ $x = get-content -raw -path <FILE_NAME>; $x -replace "[^`r]`n","`r`n" | set-cont
 #### Getting the windows release eg. 1709, 1803
 
 ```ps
-(Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").ReleaseId
+(Get-ItemProperty "HKLM:/SOFTWARE/Microsoft/Windows NT/CurrentVersion").ReleaseId
 ```
 
 #### Updating variables for the machine/process/user
 
 ```ps
 # Machine
-[Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\other\bin", [System.EnvironmentVariableTarget]::Machine )
+[Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:/other/bin", [System.EnvironmentVariableTarget]::Machine )
 # Process
-[Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Process") + ";C:\other\bin", [System.EnvironmentVariableTarget]::Process )
+[Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Process") + ";C:/other/bin", [System.EnvironmentVariableTarget]::Process )
 # User
-[Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","User") + ";C:\other\bin", [System.EnvironmentVariableTarget]::User )
+[Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","User") + ";C:/other/bin", [System.EnvironmentVariableTarget]::User )
 ```
 
 #### Refresh the PATH in the current Powershell session

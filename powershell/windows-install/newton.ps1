@@ -7,7 +7,7 @@ Param(
     [string]$Version = "3.14c"
 )
 
-$invocationDir = (Get-Item -Path ".\").FullName
+$invocationDir = (Get-Item -Path "./").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
@@ -34,17 +34,17 @@ try {
     if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\newton
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/newton
 
     # Install bin/lib
     ninja install
     if($LastExitCode -ne 0) { throw }
-    mkdir C:\newton
-    Copy-Item build\* -Destination C:\newton\ -Recurse
+    mkdir C:/newton
+    Copy-Item build/* -Destination C:/newton/ -Recurse
 
     # Delete our working directory
     cd $invocationDir
-    Remove-Item -Path .\newton-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path newton-workdir/ -Recurse -ErrorAction SilentlyContinue
 
     # Setup the environment variables (Only if not found in the var already)
     if($null -eq ( ";C:\\newton\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
@@ -62,6 +62,6 @@ try {
 } catch {
     # Cleanup the failed build folder
     cd $invocationDir
-    Remove-Item -Path .\newton-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path newton-workdir/ -Recurse -ErrorAction SilentlyContinue
     exit 1
 }

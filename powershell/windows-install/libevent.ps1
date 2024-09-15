@@ -7,7 +7,7 @@ Param(
     [string]$Version = "2.1.12-stable"
 )
 
-$invocationDir = (Get-Item -Path ".\").FullName
+$invocationDir = (Get-Item -Path "./").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
@@ -28,12 +28,12 @@ try {
 
     # Configure/compile
     Write-Host "Configuring and compiling"
-    cmake -B build -G Ninja -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="C:\libevent" -D EVENT__DISABLE_BENCHMARK=ON -D EVENT__DISABLE_OPENSSL=ON -D EVENT__DISABLE_REGRESS=ON -D EVENT__DISABLE_SAMPLES=ON -D EVENT__DISABLE_TESTS=ON -D EVENT__DISABLE_THREAD_SUPPORT=ON
+    cmake -B build -G Ninja -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="C:/libevent" -D EVENT__DISABLE_BENCHMARK=ON -D EVENT__DISABLE_OPENSSL=ON -D EVENT__DISABLE_REGRESS=ON -D EVENT__DISABLE_SAMPLES=ON -D EVENT__DISABLE_TESTS=ON -D EVENT__DISABLE_THREAD_SUPPORT=ON
     cmake --build build
     if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\libevent
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/libevent
 
     # Install
     Write-Host "Installing"
@@ -42,7 +42,7 @@ try {
     
     # Delete our working directory
     cd $invocationDir
-    Remove-Item -Path .\libevent-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path libevent-workdir/ -Recurse -ErrorAction SilentlyContinue
 
     # Setup the environment variables (Only if not found in the var already)
     if($null -eq ( ";C:\\libevent\\lib" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
@@ -60,6 +60,6 @@ try {
 } catch {
     # Cleanup the failed build folder
     cd $invocationDir
-    Remove-Item -Path .\libevent-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path libevent-workdir/ -Recurse -ErrorAction SilentlyContinue
     exit 1
 }

@@ -7,7 +7,7 @@ Param(
     [string]$Version = "1.0.1"
 )
 
-$invocationDir = (Get-Item -Path ".\").FullName
+$invocationDir = (Get-Item -Path "./").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
@@ -25,13 +25,13 @@ try {
 
     # Configure and Compile
     Write-Host "Configuring and compiling"
-    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D BUILD_SHARED_LIBS=OFF -D CMAKE_INSTALL_PREFIX="C:\glm" -D GLM_BUILD_TESTS=OFF
+    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D BUILD_SHARED_LIBS=OFF -D CMAKE_INSTALL_PREFIX="C:/glm" -D GLM_BUILD_TESTS=OFF
     cmake --build build
     if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
     Write-Host "Removing old install (if it exists)"
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\glm
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/glm
 
     # Install
     Write-Host "Installing"
@@ -40,12 +40,12 @@ try {
 
     # Delete our working directory
     cd $invocationDir
-    Remove-Item -Path .\glm-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path glm-workdir/ -Recurse -ErrorAction SilentlyContinue
 }
 catch
 {
     # Cleanup the failed build folder
     cd $invocationDir
-    Remove-Item -Path .\glm-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path glm-workdir/ -Recurse -ErrorAction SilentlyContinue
     exit 1
 }

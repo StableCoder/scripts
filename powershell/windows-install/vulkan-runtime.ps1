@@ -7,7 +7,7 @@ try {
     Invoke-WebRequest -Uri https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-runtime-components.zip?Human=true -OutFile VulkanRuntime.zip -UseBasicParsing
     7z x VulkanRuntime.zip
     cd VulkanRT-*
-    cp .\x64\* C:\VulkanSDK\Bin\
+    cp ./x64/* C:/VulkanSDK/Bin/
     cd ..
     Remove-Item VulkanRuntime.zip
     Remove-Item -Path VulkanRT-* -Recurse -ErrorAction SilentlyContinue

@@ -12,7 +12,7 @@ try {
     Remove-Item -path qt-src.tar -Recurse -ErrorAction SilentlyContinue
 
     cd qt-everywhere-opensource-src-4.8.7
-    git apply --ignore-space-change --ignore-whitespace ..\qt4-2017.patch
+    git apply --ignore-space-change --ignore-whitespace ../qt4-2017.patch
     cmd.exe /c "configure -release -make nmake -platform win32-msvc2017 -prefix c:\Qt-4.8.7 -opensource -confirm-license -opengl desktop -nomake examples -nomake tests -no-webkit"
     nmake
     nmake install

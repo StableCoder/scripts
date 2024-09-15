@@ -7,7 +7,7 @@ Param(
     [string]$Version = "3.7.0"
 )
 
-$invocationDir = (Get-Item -Path ".\").FullName
+$invocationDir = (Get-Item -Path "./").FullName
 
 try {
     # Use a working directory, to keep our work self-contained
@@ -26,13 +26,13 @@ try {
 
     # Build library
     Write-Host "Building library"
-    cmake -B build -G Ninja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:\catch2" -DCMAKE_INSTALL_LIBDIR=lib -DCATCH_BUILD_EXAMPLES=OFF -DCATCH_ENABLE_COVERAGE=OFF -DCATCH_ENABLE_WERROR=OFF -DBUILD_TESTING=ON
+    cmake -B build -G Ninja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:/catch2" -DCMAKE_INSTALL_LIBDIR=lib -DCATCH_BUILD_EXAMPLES=OFF -DCATCH_ENABLE_COVERAGE=OFF -DCATCH_ENABLE_WERROR=OFF -DBUILD_TESTING=ON
     cmake --build build
     if($LastExitCode -ne 0) { throw }
 
     # Remove the older install (if it exists)
     Write-Host "Removing old library"
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:\catch2
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/catch2
 
     # Install the compiled lib
     Write-Host "Installing library"
@@ -41,12 +41,12 @@ try {
 
     # Delete our working directory
     cd $invocationDir
-    Remove-Item -Path .\catch2-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path catch2-workdir/ -Recurse -ErrorAction SilentlyContinue
 }
 catch
 {
     # Cleanup the failed build folder
     cd $invocationDir
-    Remove-Item -Path .\catch2-workdir\ -Recurse -ErrorAction SilentlyContinue
+    Remove-Item -Path catch2-workdir/ -Recurse -ErrorAction SilentlyContinue
     exit 1
 }
