@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# Copyright (C) 2022 George Cave.
+# Copyright (C) 2022-2024 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -35,7 +35,7 @@ for FILE in $FILES; do
     head -5 $FILE | grep -i copyright 2>&1 1>/dev/null || continue
 
     # If the file doesn't have a copyright notice, add it to a list
-    if ! grep -i -e "copyright.*$YEAR" $FILE 2>&1 1>/dev/null; then
+    if ! $(git cat-file -p :$FILE | grep -i -e "copyright.*$YEAR" 2>&1 1>/dev/null); then
         MISSING_YEAR_FILES="$MISSING_YEAR_FILES $FILE"
     fi
 done
