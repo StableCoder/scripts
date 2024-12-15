@@ -19,9 +19,9 @@ try {
     Write-Host "Downloading/extracting source"
     $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
-    Invoke-WebRequest -Uri https://github.com/jbeder/yaml-cpp/archive/master.zip -OutFile yaml-cpp.zip -UseBasicParsing
-    7z x -aoa yaml-cpp.zip
-    cd yaml-cpp-master
+    Invoke-WebRequest -Uri https://github.com/jbeder/yaml-cpp/archive/refs/tags/${Version}.zip -OutFile yaml-cpp-${Version}.zip -UseBasicParsing
+    7z x -aoa yaml-cpp-${Version}.zip
+    cd yaml-cpp-${Version}
 
     # Configure and Compile
     Write-Host "Configuring and compiling"
