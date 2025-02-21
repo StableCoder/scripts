@@ -18,7 +18,7 @@ try {
     # Download the single header directly to the destination
     Write-Host "Downloading/extracting source"
     $ProgressPreference = 'SilentlyContinue'
-    [Net.ServicePointManager]::SecurityProtocol = "tls12, tls11, tls"
+    [Net.ServicePointManager]::SecurityProtocol = "tls13, tls12"
     Invoke-WebRequest -Uri https://github.com/catchorg/Catch2/archive/refs/tags/v${Version}.tar.gz -OutFile catch2.tar.gz -UseBasicParsing
     7z x -aoa catch2.tar.gz
     7z x -aoa catch2.tar
