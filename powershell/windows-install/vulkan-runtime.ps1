@@ -1,13 +1,24 @@
-# Copyright (C) 2020-2024 George Cave.
+# Copyright (C) 2020-2025 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
+Param(
+    [string]$Version = ""
+)
+
 try {
     $ProgressPreference = 'SilentlyContinue'
     [Net.ServicePointManager]::SecurityProtocol = "tls13, tls12"
-    Invoke-WebRequest -Uri https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-runtime-components.zip?Human=true -OutFile VulkanRuntime.zip -UseBasicParsing
+    if ("${Version}" -eq "") {
+        # if no version specified, pull the latest
+        Write-Host "Installing latest Vulkan Runtime"
+        Invoke-WebRequest -Uri https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-runtime-components.zip?Human=true -OutFile VulkanRuntime.zip -UseBasicParsing
+    } else {
+        Write-Host "Installing Vulkan Runtime v${Version}"
+        Invoke-WebRequest -Uri https://vulkan.lunarg.com/sdk/download/${Version}/windows/VulkanRT-${Version}-Components.zip -OutFile VulkanRuntime.zip -UseBasicParsing
+    }
     7z x VulkanRuntime.zip
     cd VulkanRT-*
-    cp ./x64/* C:/VulkanSDK/Bin/
+    cp ./x64/* C:/VulkanSDK/Bi
     cd ..
     Remove-Item VulkanRuntime.zip
     Remove-Item -Path VulkanRT-* -Recurse -ErrorAction SilentlyContinue
