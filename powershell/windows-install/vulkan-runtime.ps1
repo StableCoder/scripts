@@ -18,7 +18,7 @@ try {
     }
     7z x VulkanRuntime.zip
     cd VulkanRT-*
-    cp ./x64/* C:/VulkanSDK/Bi
+    cp ./x64/* C:/VulkanSDK/Bin/
     cd ..
     Remove-Item VulkanRuntime.zip
     Remove-Item -Path VulkanRT-* -Recurse -ErrorAction SilentlyContinue
