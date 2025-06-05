@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 Param(
-    [string]$Version = ""
+    [string]$Version = "",
+    [string]$Arch = "X64"
 )
 
 try {
@@ -13,7 +14,7 @@ try {
         Invoke-WebRequest -Uri https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-sdk.exe -OutFile VulkanSDK.exe -UseBasicParsing
     } else {
         Write-Host "Installing Vulkan SDK v${Version}"
-        Invoke-WebRequest -Uri https://vulkan.lunarg.com/sdk/download/${Version}/windows/VulkanSDK-${Version}-Installer.exe -OutFile VulkanSDK.exe -UseBasicParsing
+        Invoke-WebRequest -Uri https://vulkan.lunarg.com/sdk/download/${Version}/windows/vulkansdk-windows-${Arch}-${Version}.exe -OutFile VulkanSDK.exe -UseBasicParsing
     }
     ./VulkanSDK.exe --root C:/VulkanSDK --accept-licenses --default-answer --confirm-command install | Out-Null
     Remove-Item VulkanSDK.exe

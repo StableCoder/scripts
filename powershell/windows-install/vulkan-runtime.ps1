@@ -2,7 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 Param(
-    [string]$Version = ""
+    [string]$Version = "",
+    [string]$Arch = "X64"
 )
 
 try {
@@ -14,11 +15,12 @@ try {
         Invoke-WebRequest -Uri https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-runtime-components.zip?Human=true -OutFile VulkanRuntime.zip -UseBasicParsing
     } else {
         Write-Host "Installing Vulkan Runtime v${Version}"
-        Invoke-WebRequest -Uri https://vulkan.lunarg.com/sdk/download/${Version}/windows/VulkanRT-${Version}-Components.zip -OutFile VulkanRuntime.zip -UseBasicParsing
+        Invoke-WebRequest -Uri https://vulkan.lunarg.com/sdk/download/${Version}/windows/VulkanRT-${Arch}-${Version}-Components.zip -OutFile VulkanRuntime.zip -UseBasicParsing
     }
     7z x VulkanRuntime.zip
     cd VulkanRT-*
     cp ./x64/* C:/VulkanSDK/Bin/
+
     cd ..
     Remove-Item VulkanRuntime.zip
     Remove-Item -Path VulkanRT-* -Recurse -ErrorAction SilentlyContinue
