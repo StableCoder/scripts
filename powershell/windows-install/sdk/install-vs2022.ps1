@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 Param(
     [string]$VS_Package = "BuildTools",
-    [string]$SDK_Version = "22000"
+    [string]$SDK_Version = "Windows10SDK.19041"
 )
 
 Write-Host "Visual Studio 2022 ($VS_Package)"
@@ -19,7 +19,7 @@ try {
             --add Microsoft.VisualStudio.Component.VC.Redist.14.Latest `
             --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
             --add Microsoft.VisualStudio.Component.VC.ASAN `
-            --add Microsoft.VisualStudio.Component.Windows11SDK.$SDK_Version | Out-Null
+            --add Microsoft.VisualStudio.Component.$SDK_Version | Out-Null
     } else {
         ./vs_installer.exe --quiet --wait --norestart --nocache `
             --add Microsoft.VisualStudio.Workload.NativeDesktop `
@@ -30,7 +30,7 @@ try {
             --add Microsoft.VisualStudio.Component.VC.CMake.Project `
             --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
             --add Microsoft.VisualStudio.Component.VC.ASAN `
-            --add Microsoft.VisualStudio.Component.Windows11SDK.$SDK_Version | Out-Null
+            --add Microsoft.VisualStudio.Component.$SDK_Version | Out-Null
     }
     rm ./vs_installer.exe
 
