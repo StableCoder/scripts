@@ -4,7 +4,8 @@
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "3.25"
+    [string]$Version = "3.25",
+    [string]$InstallDir = "C:/bullet"
 )
 
 $invocationDir = (Get-Item -Path "./").FullName
@@ -26,13 +27,9 @@ try {
 
     # Configure and Compile
     Write-Host "Configuring and compiling"
-    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="C:/bullet" -D BUILD_SHARED_LIBS=OFF  -D USE_MSVC_RUNTIME_LIBRARY_DLL=ON -D BUILD_BULLET3=OFF -D BUILD_BULLET2_DEMOS=OFF -D BUILD_EXTRAS=OFF -D BUILD_UNIT_TESTS=OFF -D BUILD_PYBULLET=OFF -D INSTALL_LIBS=ON
+    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="$InstallDir" -D BUILD_SHARED_LIBS=OFF  -D USE_MSVC_RUNTIME_LIBRARY_DLL=ON -D BUILD_BULLET3=OFF -D BUILD_BULLET2_DEMOS=OFF -D BUILD_EXTRAS=OFF -D BUILD_UNIT_TESTS=OFF -D BUILD_PYBULLET=OFF -D INSTALL_LIBS=ON
     cmake --build build
     if($LastExitCode -ne 0) { throw }
-
-    # Remove the older install (if it exists)
-    Write-Host "Removing old install (if it exists)"
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/bullet
 
     # Install
     Write-Host "Installing"

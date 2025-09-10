@@ -4,7 +4,8 @@
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "3.14c"
+    [string]$Version = "3.14c",
+    [string]$InstallDir = "C:/newton"
 )
 
 $invocationDir = (Get-Item -Path "./").FullName
@@ -33,14 +34,11 @@ try {
     ninja
     if($LastExitCode -ne 0) { throw }
 
-    # Remove the older install (if it exists)
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/newton
-
     # Install bin/lib
     ninja install
     if($LastExitCode -ne 0) { throw }
-    mkdir C:/newton
-    Copy-Item build/* -Destination C:/newton/ -Recurse
+    mkdir $InstallDir
+    Copy-Item build/* -Destination $InstallDir/ -Recurse
 
     # Delete our working directory
     cd $invocationDir

@@ -4,7 +4,8 @@
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "0.8.0"
+    [string]$Version = "0.8.0",
+    [string]$InstallDir = "C:/yaml-cpp"
 )
 
 $invocationDir = (Get-Item -Path "./").FullName
@@ -25,13 +26,9 @@ try {
 
     # Configure and Compile
     Write-Host "Configuring and compiling"
-    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="C:/yaml-cpp" -D YAML_BUILD_SHARED_LIBS=ON -D YAML_CPP_BUILD_CONTRIB=OFF -D YAML_CPP_BUILD_TESTS=OFF -D YAML_CPP_BUILD_TOOLS=OFF
+    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="$InstallDir" -D YAML_BUILD_SHARED_LIBS=ON -D YAML_CPP_BUILD_CONTRIB=OFF -D YAML_CPP_BUILD_TESTS=OFF -D YAML_CPP_BUILD_TOOLS=OFF
     cmake --build build
     if($LastExitCode -ne 0) { throw }
-
-    # Remove the older install (if it exists)
-    Write-Host "Removing old install (if it exists)"
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/yaml-cpp
     
     # Install
     Write-Host "Installing"

@@ -4,7 +4,8 @@
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "1.0.1"
+    [string]$Version = "1.0.1",
+    [string]$InstallDir = "C:/glm"
 )
 
 $invocationDir = (Get-Item -Path "./").FullName
@@ -25,7 +26,7 @@ try {
 
     # Configure and Compile
     Write-Host "Configuring and compiling"
-    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D BUILD_SHARED_LIBS=OFF -D CMAKE_INSTALL_PREFIX="C:/glm" -D GLM_BUILD_TESTS=OFF
+    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D BUILD_SHARED_LIBS=OFF -D CMAKE_INSTALL_PREFIX="$InstallDir" -D GLM_BUILD_TESTS=OFF
     cmake --build build
     if($LastExitCode -ne 0) { throw }
 

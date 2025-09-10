@@ -4,7 +4,8 @@
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "0.2.5"
+    [string]$Version = "0.2.5",
+    [string]$InstallDir = "C:/libyaml"
 )
 
 $invocationDir = (Get-Item -Path "./").FullName
@@ -28,13 +29,9 @@ try {
 
     # Configure/compile
     Write-Host "Configuring and compiling"
-    cmake -B build -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:/libyaml" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF
+    cmake -B build -GNinja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="$InstallDir" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF
     cmake --build build
     if($LastExitCode -ne 0) { throw }
-
-    # Remove the older install (if it exists)
-    Write-Host "Removing old install (if it exists)"
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/libyaml
 
     # Install
     Write-Host "Installing"

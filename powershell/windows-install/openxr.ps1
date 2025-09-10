@@ -4,7 +4,8 @@
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "1.1.40"
+    [string]$Version = "1.1.40",
+    [string]$InstallDir = "C:/openxr"
 )
 
 $invocationDir = (Get-Item -Path "./").FullName
@@ -26,13 +27,9 @@ try {
 
     # Configure and Compile
     Write-Host "Configuring and compiling"
-    cmake -B build -GNinja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="C:/openxr" -D DYNAMIC_LOADER=ON
+    cmake -B build -GNinja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="$InstallDir" -D DYNAMIC_LOADER=ON
     cmake --build build
     if($LastExitCode -ne 0) { throw }
-
-    # Remove the older install (if it exists)
-    Write-Host "Removing old install (if it exists)"
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/openxr
 
     # Install
     Write-Host "Installing"

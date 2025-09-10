@@ -4,7 +4,8 @@
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "190700_20210406"
+    [string]$Version = "190700_20210406",
+    [string]$InstallDir = "C:/portaudio"
 )
 
 $invocationDir = (Get-Item -Path "./").FullName
@@ -27,13 +28,9 @@ try {
 
     # Configure/compile
     Write-Host "Configuring and compiling"
-    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="C:/portaudio"
+    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="$InstallDir"
     cmake --build build
     if($LastExitCode -ne 0) { throw }
-
-    # Remove the older install (if it exists)
-    Write-Host "Removing old install (if it exists)"
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/portaudio
 
     # Install
     Write-Host "Installing"

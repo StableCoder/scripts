@@ -4,7 +4,8 @@
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "1.0.20"
+    [string]$Version = "1.0.20",
+    [string]$InstallDir = "C:/libsodium"
 )
 
 $invocationDir = (Get-Item -Path "./").FullName
@@ -24,17 +25,17 @@ try {
     cd libsodium
 
     # Remove the older install (if it exists)
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/libsodium
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path $InstallDir
 
     # Install
     Write-Host "Installing"
-    mkdir C:/libsodium/include
-    mkdir C:/libsodium/bin
-    mkdir C:/libsodium/lib
+    mkdir $InstallDir/include
+    mkdir $InstallDir/bin
+    mkdir $InstallDir/lib
 
-    Copy-Item include/ -Destination C:/libsodium/ -Recurse
-    Copy-Item X64/$BuildType/v143/dynamic/*.dll -Destination C:/libsodium/bin/
-    Copy-Item X64/$BuildType/v143/dynamic/*.lib -Destination C:/libsodium/lib/
+    Copy-Item include/ -Destination $InstallDir/ -Recurse
+    Copy-Item X64/$BuildType/v143/dynamic/*.dll -Destination $InstallDir/bin/
+    Copy-Item X64/$BuildType/v143/dynamic/*.lib -Destination $InstallDir/lib/
     
     # Delete our working directory
     cd $invocationDir

@@ -4,7 +4,8 @@
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "3.7.0"
+    [string]$Version = "3.7.0",
+    [string]$InstallDir = "C:/catch2"
 )
 
 $invocationDir = (Get-Item -Path "./").FullName
@@ -26,13 +27,9 @@ try {
 
     # Build library
     Write-Host "Building library"
-    cmake -B build -G Ninja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="C:/catch2" -DCMAKE_INSTALL_LIBDIR=lib -DCATCH_BUILD_EXAMPLES=OFF -DCATCH_ENABLE_COVERAGE=OFF -DCATCH_ENABLE_WERROR=OFF -DBUILD_TESTING=ON
+    cmake -B build -G Ninja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_INSTALL_LIBDIR=lib -DCATCH_BUILD_EXAMPLES=OFF -DCATCH_ENABLE_COVERAGE=OFF -DCATCH_ENABLE_WERROR=OFF -DBUILD_TESTING=ON
     cmake --build build
     if($LastExitCode -ne 0) { throw }
-
-    # Remove the older install (if it exists)
-    Write-Host "Removing old library"
-    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue -Path C:/catch2
 
     # Install the compiled lib
     Write-Host "Installing library"

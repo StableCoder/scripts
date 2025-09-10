@@ -4,7 +4,8 @@
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "2.1.12-stable"
+    [string]$Version = "2.1.12-stable",
+    [string]$InstallDir = "C:/libevent"
 )
 
 $invocationDir = (Get-Item -Path "./").FullName
@@ -28,7 +29,7 @@ try {
 
     # Configure/compile
     Write-Host "Configuring and compiling"
-    cmake -B build -G Ninja -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="C:/libevent" -D EVENT__DISABLE_BENCHMARK=ON -D EVENT__DISABLE_OPENSSL=ON -D EVENT__DISABLE_REGRESS=ON -D EVENT__DISABLE_SAMPLES=ON -D EVENT__DISABLE_TESTS=ON -D EVENT__DISABLE_THREAD_SUPPORT=ON
+    cmake -B build -G Ninja -D BUILD_SHARED_LIBS=ON -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="$InstallDir" -D EVENT__DISABLE_BENCHMARK=ON -D EVENT__DISABLE_OPENSSL=ON -D EVENT__DISABLE_REGRESS=ON -D EVENT__DISABLE_SAMPLES=ON -D EVENT__DISABLE_TESTS=ON -D EVENT__DISABLE_THREAD_SUPPORT=ON
     cmake --build build
     if($LastExitCode -ne 0) { throw }
 
