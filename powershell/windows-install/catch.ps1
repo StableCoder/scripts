@@ -4,7 +4,7 @@
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "3.7.0",
+    [string]$Version = "3.10.0",
     [string]$InstallDir = "C:/catch2"
 )
 

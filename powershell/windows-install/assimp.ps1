@@ -4,7 +4,7 @@
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "5.4.3",
+    [string]$Version = "6.0.2",
     [string]$InstallDir = "C:/assimp"
 )
 

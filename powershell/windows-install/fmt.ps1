@@ -4,7 +4,7 @@
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "11.0.2",
+    [string]$Version = "11.2.0",
     [string]$InstallDir = "C:/fmt"
 )
 
