@@ -4,7 +4,7 @@
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
-    [string]$Version = "1.1.51",
+    [string]$Version = "1.1.54",
     [string]$InstallDir = "C:/openxr",
     [string]$EnvironmentVariableScope = "User" # use 'Machine' to set it machine-wide
 )
