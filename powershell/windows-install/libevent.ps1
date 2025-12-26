@@ -1,11 +1,12 @@
-# Copyright (C) 2023-2024 George Cave.
+# Copyright (C) 2023-2025 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
     [string]$Version = "2.1.12-stable",
-    [string]$InstallDir = "C:/libevent"
+    [string]$InstallDir = "C:/libevent",
+    [string]$EnvironmentVariableScope = "User" # use 'Machine' to set it machine-wide
 )
 
 $invocationDir = (Get-Item -Path "./").FullName
@@ -46,17 +47,14 @@ try {
     Remove-Item -Path libevent-workdir/ -Recurse -ErrorAction SilentlyContinue
 
     # Setup the environment variables (Only if not found in the var already)
-    if($null -eq ( ";C:\\libevent\\lib" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
-        # PATH
-        [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\libevent\lib", [System.EnvironmentVariableTarget]::Machine )
+    if($null -eq ( ";$InstallDir/lib" | ? { [System.Environment]::GetEnvironmentVariable("PATH","$EnvironmentVariableScope") -match $_ })) {
+        [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","$EnvironmentVariableScope") + ";$InstallDir/lib", [System.EnvironmentVariableTarget]::$EnvironmentVariableScope )
     }
-    if($null -eq ( ";C:\\libevent\\include" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") -match $_ })) {
-        # CUSTOM_INCLUDE
-        [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:\libevent\include", [System.EnvironmentVariableTarget]::Machine )
+    if($null -eq ( ";$InstallDir/include" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","$EnvironmentVariableScope") -match $_ })) {
+        [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","$EnvironmentVariableScope") + ";$InstallDir/include", [System.EnvironmentVariableTarget]::$EnvironmentVariableScope )
     }
-    if($null -eq ( ";C:\\libevent\\lib" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") -match $_ })) {
-        # CUSTOM_LIB
-        [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";C:\libevent\lib", [System.EnvironmentVariableTarget]::Machine )
+    if($null -eq ( ";$InstallDir/lib" | ? { [System.Environment]::GetEnvironmentVariable("PCUSTOM_LIBATH","$EnvironmentVariableScope") -match $_ })) {
+        [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","$EnvironmentVariableScope") + ";$InstallDir/lib", [System.EnvironmentVariableTarget]::$EnvironmentVariableScope )
     }
 } catch {
     # Cleanup the failed build folder

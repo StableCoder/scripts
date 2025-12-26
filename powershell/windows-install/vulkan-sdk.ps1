@@ -3,7 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 Param(
     [string]$Version = "",
-    [string]$Arch = "X64"
+    [string]$Arch = "X64",
+    [string]$EnvironmentVariableScope = "User" # use 'Machine' to set it machine-wide
 )
 
 try {
@@ -20,8 +21,8 @@ try {
     Remove-Item VulkanSDK.exe
     Remove-Item -Path C:/VulkanSDK/Bin32 -Recurse -ErrorAction SilentlyContinue
 
-    [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:/VulkanSDK/Include", [System.EnvironmentVariableTarget]::Machine )
-    [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";C:/VulkanSDK/lib", [System.EnvironmentVariableTarget]::Machine )
+    [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","$EnvironmentVariableScope") + ";C:/VulkanSDK/Include", [System.EnvironmentVariableTarget]::$EnvironmentVariableScope )
+    [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","$EnvironmentVariableScope") + ";C:/VulkanSDK/lib", [System.EnvironmentVariableTarget]::$EnvironmentVariableScope )
 }
 catch
 {

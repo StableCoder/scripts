@@ -1,10 +1,11 @@
-# Copyright (C) 2019-2024 George Cave.
+# Copyright (C) 2019-2025 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 Param(
     # By default, build release variants of libraries
     [string]$Version = "3.18.0",
-    [string]$InstallDir = "C:/freeimage"
+    [string]$InstallDir = "C:/freeimage",
+    [string]$EnvironmentVariableScope = "User" # use 'Machine' to set it machine-wide
 )
 
 $invocationDir = (Get-Item -Path "./").FullName
@@ -36,18 +37,14 @@ try {
     Remove-Item -Path ./freeimage-workdir/ -Recurse -ErrorAction SilentlyContinue
 
     # Setup the environment variables (Only if not found in the var already)
-    # @TODO
-    if($null -eq ( ";C:\\freeimage\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
-        # PATH
-        [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\freeimage\bin", [System.EnvironmentVariableTarget]::Machine )
+    if($null -eq ( ";$InstallDir/bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","$EnvironmentVariableScope") -match $_ })) {
+        [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","$EnvironmentVariableScope") + ";$InstallDir/bin", [System.EnvironmentVariableTarget]::$EnvironmentVariableScope )
     }
-    if($null -eq ( ";C:\\freeimage\\include" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") -match $_ })) {
-        # CUSTOM_INCLUDE
-        [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:\freeimage\include", [System.EnvironmentVariableTarget]::Machine )
+    if($null -eq ( ";$InstallDir/include" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","$EnvironmentVariableScope") -match $_ })) {
+        [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","$EnvironmentVariableScope") + ";$InstallDir/include", [System.EnvironmentVariableTarget]::$EnvironmentVariableScope )
     }
-    if($null -eq ( ";C:\\freeimage\\lib" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") -match $_ })) {
-        # CUSTOM_LIB
-        [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";C:\freeimage\lib", [System.EnvironmentVariableTarget]::Machine )
+    if($null -eq ( ";$InstallDir/lib" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","$EnvironmentVariableScope") -match $_ })) {
+        [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","$EnvironmentVariableScope") + ";$InstallDir/lib", [System.EnvironmentVariableTarget]::$EnvironmentVariableScope )
     }
 }
 catch

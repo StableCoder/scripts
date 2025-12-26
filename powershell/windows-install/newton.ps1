@@ -1,11 +1,12 @@
-# Copyright (C) 2019-2024 George Cave.
+# Copyright (C) 2019-2025 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
     [string]$Version = "3.14c",
-    [string]$InstallDir = "C:/newton"
+    [string]$InstallDir = "C:/newton",
+    [string]$EnvironmentVariableScope = "User" # use 'Machine' to set it machine-wide
 )
 
 $invocationDir = (Get-Item -Path "./").FullName
@@ -45,17 +46,14 @@ try {
     Remove-Item -Path newton-workdir/ -Recurse -ErrorAction SilentlyContinue
 
     # Setup the environment variables (Only if not found in the var already)
-    if($null -eq ( ";C:\\newton\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
-        # PATH
-        [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\newton\bin", [System.EnvironmentVariableTarget]::Machine )
+    if($null -eq ( ";$InstallDir/bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","$EnvironmentVariableScope") -match $_ })) {
+        [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","$EnvironmentVariableScope") + ";$InstallDir/bin", [System.EnvironmentVariableTarget]::$EnvironmentVariableScope )
     }
-    if($null -eq ( ";C:\\newton\\include" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") -match $_ })) {
-        # CUSTOM_INCLUDE
-        [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","Machine") + ";C:\newton\include", [System.EnvironmentVariableTarget]::Machine )
+    if($null -eq ( ";$InstallDir/include" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","$EnvironmentVariableScope") -match $_ })) {
+        [Environment]::SetEnvironmentVariable( "CUSTOM_INCLUDE", [System.Environment]::GetEnvironmentVariable("CUSTOM_INCLUDE","$EnvironmentVariableScope") + ";$InstallDir/include", [System.EnvironmentVariableTarget]::$EnvironmentVariableScope )
     }
-    if($null -eq ( ";C:\\newton\\lib" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") -match $_ })) {
-        # CUSTOM_LIB
-        [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","Machine") + ";C:\newton\lib", [System.EnvironmentVariableTarget]::Machine )
+    if($null -eq ( ";$InstallDir/lib" | ? { [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","$EnvironmentVariableScope") -match $_ })) {
+        [Environment]::SetEnvironmentVariable( "CUSTOM_LIB", [System.Environment]::GetEnvironmentVariable("CUSTOM_LIB","$EnvironmentVariableScope") + ";$InstallDir/lib", [System.EnvironmentVariableTarget]::$EnvironmentVariableScope )
     }
 } catch {
     # Cleanup the failed build folder

@@ -1,11 +1,12 @@
-# Copyright (C) 2018-2024 George Cave.
+# Copyright (C) 2018-2025 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 Param(
     # By default, build release variants of libraries
     [string]$BuildType = "Release",
     [string]$Version = "190700_20210406",
-    [string]$InstallDir = "C:/portaudio"
+    [string]$InstallDir = "C:/portaudio",
+    [string]$EnvironmentVariableScope = "User" # use 'Machine' to set it machine-wide
 )
 
 $invocationDir = (Get-Item -Path "./").FullName
@@ -42,9 +43,8 @@ try {
     Remove-Item -Path portaudio-workdir/ -Recurse -ErrorAction SilentlyContinue
 
     # Setup the environment variables (Only if not found in the var already)
-    if($null -eq ( ";C:\\portaudio\\bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","Machine") -match $_ })) {
-        # PATH
-        [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","Machine") + ";C:\portaudio\bin", [System.EnvironmentVariableTarget]::Machine )
+    if($null -eq ( ";$InstallDir/bin" | ? { [System.Environment]::GetEnvironmentVariable("PATH","$EnvironmentVariableScope") -match $_ })) {
+        [Environment]::SetEnvironmentVariable( "PATH", [System.Environment]::GetEnvironmentVariable("PATH","$EnvironmentVariableScope") + ";$InstallDir/bin", [System.EnvironmentVariableTarget]::$EnvironmentVariableScope )
     }
 }
 catch
