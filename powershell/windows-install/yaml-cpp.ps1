@@ -26,7 +26,7 @@ try {
 
     # Configure and Compile
     Write-Host "Configuring and compiling"
-    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="$InstallDir" -D YAML_BUILD_SHARED_LIBS=ON -D YAML_CPP_BUILD_CONTRIB=OFF -D YAML_CPP_BUILD_TESTS=OFF -D YAML_CPP_BUILD_TOOLS=OFF
+    cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="$InstallDir" -D YAML_BUILD_SHARED_LIBS=ON -D YAML_CPP_BUILD_CONTRIB=OFF -D YAML_CPP_BUILD_TESTS=OFF -D YAML_CPP_BUILD_TOOLS=OFF -D CMAKE_POLICY_VERSION_MINIMUM="3.5"
     cmake --build build
     if($LastExitCode -ne 0) { throw }
     
