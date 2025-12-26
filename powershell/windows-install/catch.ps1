@@ -26,13 +26,13 @@ try {
     cd Catch2-${Version}
 
     # Build library
-    Write-Host "Building library"
+    Write-Host "Configuring and compiling"
     cmake -B build -G Ninja -DCMAKE_BUILD_TYPE="$BuildType" -DCMAKE_INSTALL_PREFIX="$InstallDir" -DCMAKE_INSTALL_LIBDIR=lib -DCATCH_BUILD_EXAMPLES=OFF -DCATCH_ENABLE_COVERAGE=OFF -DCATCH_ENABLE_WERROR=OFF -DBUILD_TESTING=ON
     cmake --build build
     if($LastExitCode -ne 0) { throw }
 
     # Install the compiled lib
-    Write-Host "Installing library"
+    Write-Host "Installing"
     cmake --install build
     if($LastExitCode -ne 0) { throw }
 

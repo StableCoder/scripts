@@ -26,13 +26,13 @@ try {
     cd fmt-${Version}
 
     # Build library
-    Write-Host "Building library"
+    Write-Host "Configuring and compiling"
     cmake -B build -G Ninja -D CMAKE_BUILD_TYPE="$BuildType" -D CMAKE_INSTALL_PREFIX="$InstallDir" -D FMT_DOC=OFF -D FMT_TEST=OFF
     cmake --build build
     if($LastExitCode -ne 0) { throw }
 
     # Install the compiled lib
-    Write-Host "Installing library"
+    Write-Host "Installing"
     cmake --install build
     if($LastExitCode -ne 0) { throw }
     
