@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (C) 2022-2023 George Cave.
+# Copyright (C) 2022-2026 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -65,5 +65,5 @@ then
     OUTPUT=$VOLUME-$(date +%Y-%m-%d-%H-%M-%S)
 fi
 
-docker run --rm -it -v $VOLUME:/volume -v /$(pwd):/backup ubuntu:latest \
+podman run --rm -it -v $VOLUME:/volume -v /$(pwd):/backup ubuntu:latest \
     sh -c "apt update && apt install bzip2 zstd && tar -capf /backup/$OUTPUT.tar.$COMPRESSION -C /volume ./"

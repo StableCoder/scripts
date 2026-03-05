@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright (C) 2022-2023 George Cave.
+# Copyright (C) 2022-2026 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -47,5 +47,5 @@ then
     read -p "Please enter the name of the volume to restore to: " VOLUME
 fi
 
-docker run --rm -it -v $VOLUME:/volume -v /$(pwd):/backup ubuntu:latest \
-    sh -c "rm -rf /volume/* /volume/..?* /volume/.[!.]* ; tar --same-owner -C /volume/ -xapf /backup/$FILE"
+podman run --rm -it -v $VOLUME:/volume -v /$(pwd):/backup ubuntu:latest \
+    sh -c "apt update && apt install bzip2 zstd && rm -rf /volume/* /volume/..?* /volume/.[!.]* ; tar --same-owner -C /volume/ -xapf /backup/$FILE"
