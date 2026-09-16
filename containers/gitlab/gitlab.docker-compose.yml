@@ -1,36 +1,40 @@
-# Copyright (C) 2022 George Cave.
+# Copyright (C) 2022-2026 George Cave.
 #
 # SPDX-License-Identifier: Apache-2.0
 
 # To setup cert from Let's Encrypt, call
-# sudo podman run -it --rm --name certbot -v "/home/ec2-user/etc-letsencrypt:/etc/letsencrypt" -v "/home/ec2-user/var-lib-letsencrypt:/var/lib/letsencrypt" -p 80:80 -p 443:443 docker.io/certbot/certbot:latest certonly
+# podman run -it --rm -v "${HOME}/etc-letsencrypt:/etc/letsencrypt" -v "${HOME}/var-lib-letsencrypt:/var/lib/letsencrypt" -p 80:80 -p 443:443 docker.io/certbot/certbot:latest certonly
 
-version: '3'
+version: "3"
 services:
   gitlab:
     container_name: gitlab
     image: gitlab/gitlab-ce:latest
-    restart: always
+    restart: unless-stopped
     hostname: git.stabletec.com
+    shm_size: 256m
+    stop_grace_period: 5m00s
     ports:
       - "22:22"
     volumes:
       - GitlabConfig:/etc/gitlab
-      - GitlabLogs:/var/log/gitlab
       - GitlabData:/var/opt/gitlab
+      - GitlabLogs:/var/log/gitlab
+
   nginx:
     container_name: nginx
     image: nginx:alpine
-    restart: always
+    restart: unless-stopped
+    depends_on: gitlab
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ./nginx.conf.d:/etc/nginx/conf.d
-      - /home/ec2-user/etc-letsencrypt:/etc/letsencrypt
-      - /home/ec2-user/var-lib-letsencrypt:/var/lib/letsencrypt
+      - ${HOME}/etc-letsencrypt:/etc/letsencrypt
+      - ${HOME}/var-lib-letsencrypt:/var/lib/letsencrypt
 
 volumes:
   GitlabConfig:
-  GitlabLogs:
   GitlabData:
+  GitlabLogs:
