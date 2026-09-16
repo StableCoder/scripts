@@ -47,5 +47,5 @@ then
     read -p "Please enter the name of the volume to restore to: " VOLUME
 fi
 
-podman run --rm -it -v $VOLUME:/volume -v /$(pwd):/backup ubuntu:latest \
-    sh -c "apt update && apt install bzip2 zstd && rm -rf /volume/* /volume/..?* /volume/.[!.]* ; tar --same-owner -C /volume/ -xapf /backup/$FILE"
+podman run --rm -it -v $VOLUME:/volume -v $(pwd):/backup ubuntu:latest \
+	sh -c "apt update && apt install -y bzip2 zstd && rm -rf /volume/* /volume/..?* /volume/.[!.]* ; tar --same-owner -C /volume/ -xapf /backup/$FILE"

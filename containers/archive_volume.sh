@@ -66,4 +66,4 @@ then
 fi
 
 podman run --rm -it -v $VOLUME:/volume -v /$(pwd):/backup ubuntu:latest \
-    sh -c "apt update && apt install bzip2 zstd && tar -capf /backup/$OUTPUT.tar.$COMPRESSION -C /volume ./"
+    sh -c "apt update && apt install -y bzip2 zstd && tar -capf /backup/$OUTPUT.tar.$COMPRESSION -C /volume ./"
